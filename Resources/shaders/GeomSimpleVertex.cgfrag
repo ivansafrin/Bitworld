@@ -1,0 +1,21 @@
+
+struct vert2frag {
+  float4 tex0 : TEXCOORD0;
+  float4 fogInfo : TEXCOORD2;
+  float4 color : COLOR;
+  float4 normal : TEXCOORD1;
+};
+
+
+struct pixel {
+  float4 color : COLOR;
+};
+
+pixel main(vert2frag IN,
+        uniform sampler2D diffuse) {
+
+  pixel OUT;
+  OUT.color = IN.color * tex2D(diffuse, IN.tex0.xy);  
+  OUT.color.xyz = lerp(IN.fogInfo.xyz, OUT.color.xyz, IN.fogInfo.w );
+  return OUT;
+}
