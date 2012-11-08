@@ -6,18 +6,18 @@ function CharPicker:CharPicker()
     self.pickerScreen = Screen()
 
     self.archerLabel = ScreenLabel("ARCHER (HARD)", 64, "main")
-    self.archerLabel.x = (800-self.archerLabel:getWidth())/2
-    self.archerLabel.y = (300-self.archerLabel:getHeight())/2
+    self.archerLabel.position.x = (800-self.archerLabel:getWidth())/2
+    self.archerLabel.position.y = (300-self.archerLabel:getHeight())/2
     self.pickerScreen:addChild(self.archerLabel)
 
     self.knightLabel = ScreenLabel("KNIGHT (EASY)", 64, "main")
-    self.knightLabel.x = (800-self.knightLabel:getWidth())/2
-    self.knightLabel.y = (300-self.knightLabel:getHeight())/2
+    self.knightLabel.position.x = (800-self.knightLabel:getWidth())/2
+    self.knightLabel.position.y = (300-self.knightLabel:getHeight())/2
     self.pickerScreen:addChild(self.knightLabel)
 
     self.wizardLabel = ScreenLabel("WIZZARD (MEDIUM)", 64, "main")
-    self.wizardLabel.x = (800-self.wizardLabel:getWidth())/2
-    self.wizardLabel.y = (300-self.wizardLabel:getHeight())/2
+    self.wizardLabel.position.x = (800-self.wizardLabel:getWidth())/2
+    self.wizardLabel.position.y = (300-self.wizardLabel:getHeight())/2
     self.pickerScreen:addChild(self.wizardLabel)
 
     self.pickerScreen.enabled = false
@@ -57,7 +57,7 @@ function CharPicker:Update(e)
     self.wizard:Update(e)
     self.knight:Update(e)
 
-    self.rotator.yaw = self.choice*115
+    self.rotator.rotation.yaw = self.choice*115
 
     self.archerLabel.visible = false
     self.knightLabel.visible = false

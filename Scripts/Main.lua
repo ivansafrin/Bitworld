@@ -16,6 +16,7 @@ require "Scripts/TalkUI"
 
 -- Set the texture filtering mode to "nearest" so that pixelart doesnt get blurry
 Services.Renderer:setTextureFilteringMode(Renderer.TEX_FILTERING_NEAREST)
+Services.Renderer:setClippingPlanes(0.01, 100.0)
 
 -- Register our font under the name "main"
 Services.FontManager:registerFont("main", "Resources/fonts/fatkiddl2.ttf")
@@ -245,8 +246,6 @@ levelRotateSound = Sound("Resources/sfx/levelRotate.wav")
 
 showingCharPicker = false
 
-
-
 function initGame()
 	Services.ResourceManager:addDirResource("Resources/gfx", false)
 	Services.ResourceManager:addDirResource("Resources/shaders", false)
@@ -276,6 +275,7 @@ function initGame()
 	typeSound = Sound("Resources/sfx/type.wav")
 
 	arrowChargeSound = Sound("Resources/sfx/arrowCharge.wav")
+
 	introMusic = Sound("Resources/music/intro.ogg")
 	villageMusic = Sound("Resources/music/village.ogg")
 
@@ -323,8 +323,8 @@ function initLevel()
 	charPicker = CharPicker()
 	charPicker.enabled = false
 
-	introDone()
-	--showIntro()
+	--introDone()
+	showIntro()
 end
 
 function showVillageLevel()
@@ -377,7 +377,6 @@ function updateVillageCam(e)
 end
 
 function createNewLevel()
-
 	levelRotate = false
 
 	hud.enabled = true
@@ -393,7 +392,7 @@ function createNewLevel()
 	camPerlin = Perlin(3,5,1.0,random())
 	perlinPosition = 0
 
-	camera = level.defaultCamera
+	camera = level:getDefaultCamera()
 	camera.fov = 65
 --	camera:setPostFilter("Pixellate")
 
@@ -403,7 +402,7 @@ function createNewLevel()
 	level:addChild(player)
 	player.level = level
 
-	hud:createMinimap(level)
+--	hud:createMinimap(level)
 
 	player.HP = playerHP
 	player.maxHP = playerMaxHP
@@ -412,13 +411,13 @@ function createNewLevel()
 
 	level.player = player
 
-	level.__cbody.ambientColor.r = levelTemplate.ambientR
-	level.__cbody.ambientColor.g = levelTemplate.ambientG
-	level.__cbody.ambientColor.b = levelTemplate.ambientB
+	level.ambientColor.r = levelTemplate.ambientR
+	level.ambientColor.g = levelTemplate.ambientG
+	level.ambientColor.b = levelTemplate.ambientB
 
-	RENDERER:setClearColor(levelTemplate.fogR/255.0,levelTemplate.fogG/255.0,levelTemplate.fogB/255.0)
+	Services.Renderer:setClearColor(levelTemplate.fogR/255.0,levelTemplate.fogG/255.0,levelTemplate.fogB/255.0)
 
-	light = SceneLight(AREA_LIGHT, 1.05,0.14,level)
+	light = SceneLight(SceneLight.AREA_LIGHT, level, 2.0)
 	light:setLightColor(1,0.9,0.8)
 	level:addLight(light)
 	player.bodyAnchor:addChild(light)
@@ -432,14 +431,15 @@ function createNewLevel()
 	music:Stop()
 	music = musics[levelTemplate.musicIndex]
 	music:Play(false)
+
 end
 
 function loadFirstDungeonLevel()
 	villageMusic:Stop()
 
-	villageLevel.__cbody:removeEntity(player.__cbody)
-	villageLevel.player = nil	
-	villageLevel.__cbody:setEnabled(false)
+	villageLevel:removeEntity(player)
+	villageLevel.player = nil
+	villageLevel.enabled = false
 	levelIndex = 0
 	playerHP = 7
 	playerClass = "archer"
@@ -525,7 +525,7 @@ end
 
 function cleanCurrentLevel()
 	levelLoaded = false
-	level.__cbody:setEnabled(false)
+	level.enabled = false
 	level = nil
 	player = nil
 	collectgarbage("collect")
@@ -668,7 +668,7 @@ function onKeyDown(key)
 	else
 		levelRotate = true
 	end
-	 levelRotateSound:Play(true)
+	 levelRotateSound:Play()
 	 player:setSpeed(0,0)
   end 
 end

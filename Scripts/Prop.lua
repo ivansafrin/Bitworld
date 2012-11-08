@@ -8,10 +8,9 @@ function Prop:Prop(propIndex)
     local scale = self.scale
 
     self.shadow = ScenePrimitive(ScenePrimitive.TYPE_PLANE, 0.15,0.15,0)
-    self.shadow.pitch = -90
-    self.shadow.y = 0.001
-    self.shadow.x = 0.04
-    self.shadow.z = -0.00
+    self.shadow.position.y = 0.001
+    self.shadow.position.x = 0.04
+    self.shadow.position.z = -0.00
     self.shadow:setColor(1,1,1,0.58)
     self.shadow:setMaterialByName("Shadow")
     self:addChild(self.shadow)

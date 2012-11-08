@@ -6,25 +6,25 @@ function TalkUI:TalkUI()
 
     local rect = ScreenShape(ScreenShape.SHAPE_RECT, 800, 100, 0,0)
     rect:setPositionMode(ScreenEntity.POSITION_TOPLEFT)
-    rect.y = 600 - 80
+    rect.position.y = 600 - 80
     rect:setColor(0,0,0,1)
     self:addChild(rect)
 
     self.blinkRect = ScreenShape(ScreenShape.SHAPE_RECT, 16, 16, 0,0)
     self.blinkRect:setPositionMode(ScreenEntity.POSITION_TOPLEFT)
-    self.blinkRect.y = (600 - 100) + 25 + 25 + 19
+    self.blinkRect.position.y = (600 - 100) + 25 + 25 + 19
     self:addChild(self.blinkRect)
 
 
     self.nameLabel = ScreenLabel("GARBUNKLE", 34, "main")
-    self.nameLabel.x = 25
-    self.nameLabel.y = (600 - 100) + 25
+    self.nameLabel.position.x = 25
+    self.nameLabel.position.y = (600 - 100) + 25
     self:addChild(self.nameLabel)
     self.nameLabel:setColor(1,1,1,0.5)
 
     self.textLabel = ScreenLabel("I AM SAYING SOME CRAZY CRAP!!!", 34, "main")
-    self.textLabel.x = 25
-    self.textLabel.y = (600 - 100) + 25 + 25
+    self.textLabel.position.x = 25
+    self.textLabel.position.y = (600 - 100) + 25 + 25
     self:addChild(self.textLabel)
 
     self.currentLine = 0
@@ -53,8 +53,8 @@ function TalkUI:talkToNPC(npc)
 
     self.nameLabel:setText(npc.name)
 
-    self.nameLabel.x = 25
-    self.nameLabel.y = (600 - 100) + 25
+    self.nameLabel.position.x = 25
+    self.nameLabel.position.y = (600 - 100) + 25
 
     talking = true
     self:Progress()

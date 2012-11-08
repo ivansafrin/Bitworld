@@ -1,355 +1,444 @@
 <?xml version="1.0" ?>
-<polycode>
-  <materials>
-    <material name="Pixellate">
-        <shader name="Pixellate">
-      </shader>      
-    </material>
-
-    <material name="DungeonWorld">
-      <shader name="GeomSimple">
-        <textures>
-            <texture name="diffuse">floor_1.png</texture>
-        </textures>
-      </shader>
-    </material>
-
-<material name="CastleSkin">
-    <shader name="GeomSimpleVertex">
-        <textures>
-            <texture name="diffuse">floor_1.png</texture>
-        </textures>
-      </shader>
-    </material>
-
-<material name="CastleSkinWall">
-    <shader name="GeomSimple">
-        <textures>
-            <texture name="diffuse">castleWall.png</texture>
-        </textures>
-      </shader>
-    </material>
-
-<material name="LavaSkin">
-    <shader name="GeomSimpleVertex">
-        <textures>
-            <texture name="diffuse">floor_lava.png</texture>
-        </textures>
-      </shader>
-    </material>
-
-<material name="LavaSkinWall">
-    <shader name="GeomSimple">
-        <textures>
-            <texture name="diffuse">castleWall.png</texture>
-        </textures>
-      </shader>
-    </material>
-
-<material name="VillageSkin">
-    <shader name="Unlit">
-        <textures>
-            <texture name="diffuse">floor_village.png</texture>
-        </textures>
-      </shader>
-    </material>
-
-<material name="VillageSkinWall">
-    <shader name="Unlit">
-        <textures>
-            <texture name="diffuse">floor_village.png</texture>
-        </textures>
-      </shader>
-    </material>
-
-
-    <material name="IntroWall">
-        <shader type="fixed">
-            <textures>
-                <texture name="diffuse">introWall.png</texture>
-            </textures>
-        </shader>
-    </material>
-
-
-<material name="Slash">
-      <shader name="GeomSimpleVertex">
-        <textures>
-            <texture name="diffuse">slash.png</texture>
-        </textures>
-      </shader>
-    </material>    
-
-<material name="SlashB">
-      <shader name="GeomSimpleVertex">
-        <textures>
-            <texture name="diffuse">slash_b.png</texture>
-        </textures>
-      </shader>
-    </material>    
-
-
-
-<material name="Shadow">
-      <shader name="GeomSimpleVertex">
-        <textures>
-            <texture name="diffuse">shadow.png</texture>
-        </textures>
-      </shader>
-    </material>    
-
-<material name="CreatureNoWeapon">
-      <shader name="GeomSimpleVertex">
-        <textures>
-            <texture name="diffuse">ass_char_tran_noweap.png</texture>
-        </textures>
-      </shader>
-    </material>    
-
-<material name="CreatureNoWeaponHurt">
-      <shader name="GeomSimpleVertexHurt">
-        <textures>
-            <texture name="diffuse">ass_char_tran_noweap.png</texture>
-        </textures>
-      </shader>
-    </material>    
-
-
-<material name="Prop">
-      <shader name="GeomSimpleVertex">
-        <textures>
-            <texture name="diffuse">props.png</texture>
-        </textures>
-      </shader>
-    </material>    
-
-<material name="PropLight">
-      <shader name="GeomSimpleVertexLight">
-        <textures>
-            <texture name="diffuse">props.png</texture>
-        </textures>
-      </shader>
-    </material>    
-
-<material name="Lava">
-      <shader name="GeomSimple">
-        <textures>
-            <texture name="diffuse">lava.png</texture>
-        </textures>
-      </shader>
-    </material>  
-
-<material name="exitGlow">
-      <shader name="GeomFogOnly">
-        <textures>
-            <texture name="diffuse">glow.png</texture>
-        </textures>
-      </shader>
-    </material>    
-
-<material name="Shield">
-      <shader name="GeomSimpleVertex">
-        <textures>
-            <texture name="diffuse">shield.png</texture>
-        </textures>
-      </shader>
-    </material>    
-
-<material name="ShieldLight">
-      <shader name="GeomSimpleVertexSuperLight">
-        <textures>
-            <texture name="diffuse">shield.png</texture>
-        </textures>
-      </shader>
-    </material>  
-
-<material name="ShieldHurt">
-      <shader name="GeomSimpleVertexHurt">
-        <textures>
-            <texture name="diffuse">shield.png</texture>
-        </textures>
-      </shader>
-    </material>    
-
-<material name="Blood">
-      <shader name="GeomSimpleVertexLight">
-        <textures>
-            <texture name="diffuse">blood.png</texture>
-        </textures>
-      </shader>
-    </material>    
-
-<material name="SkelBlood">
-      <shader name="GeomSimpleVertexLight">
-        <textures>
-            <texture name="diffuse">skelBlood.png</texture>
-        </textures>
-      </shader>
-    </material>    
-
-<material name="GreenBlood">
-      <shader name="GeomSimpleVertexLight">
-        <textures>
-            <texture name="diffuse">greenBlood.png</texture>
-        </textures>
-      </shader>
-    </material> 
-
-<material name="YellowBlood">
-      <shader name="GeomSimpleVertexLight">
-        <textures>
-            <texture name="diffuse">yellowBlood.png</texture>
-        </textures>
-      </shader>
-    </material>
-
-<material name="BlackBlood">
-      <shader name="GeomSimpleVertexLight">
-        <textures>
-            <texture name="diffuse">blackBlood.png</texture>
-        </textures>
-      </shader>
-    </material>
- 
-
-<material name="WoodBlood">
-      <shader name="GeomSimpleVertexLight">
-        <textures>
-            <texture name="diffuse">woodBlood.png</texture>
-        </textures>
-      </shader>
-    </material> 
-
-    <material name="Heart">
-      <shader name="GeomFogOnly">
-        <textures>
-            <texture name="diffuse">heart.png</texture>
-        </textures>
-      </shader>
-    </material> 
-
-    <material name="Golds">
-      <shader name="GeomFogOnly">
-        <textures>
-            <texture name="diffuse">golds.png</texture>
-        </textures>
-      </shader>
-    </material> 
-
-
-<material name="Arrow">
-      <shader name="GeomSimpleVertexLight">
-        <textures>
-            <texture name="diffuse">arrow.png</texture>
-        </textures>
-      </shader>
-    </material> 
-
-
-<material name="DragonBodyAttack">
-      <shader name="GeomSimpleVertex">
-        <textures>
-            <texture name="diffuse">dragonBodyFullAttack.png</texture>
-        </textures>
-      </shader>
-    </material> 
-
-<material name="DragonBody">
-      <shader name="GeomSimpleVertex">
-        <textures>
-            <texture name="diffuse">dragonBodyFull.png</texture>
-        </textures>
-      </shader>
-    </material> 
-
-<material name="DragonBodyLight">
-      <shader name="GeomSimpleVertexSuperLight">
-        <textures>
-            <texture name="diffuse">dragonBodyFull.png</texture>
-        </textures>
-      </shader>
-    </material> 
-
-<material name="DragonBodyHurt">
-      <shader name="GeomSimpleVertexHurt">
-        <textures>
-            <texture name="diffuse">dragonBodyFull.png</texture>
-        </textures>
-      </shader>
-    </material> 
-
-<material name="DragonHead">
-      <shader name="GeomSimpleVertex">
-        <textures>
-            <texture name="diffuse">dragonHead.png</texture>
-        </textures>
-      </shader>
-  </material> 
-
-<material name="DragonNeck">
-      <shader name="GeomSimpleVertex">
-        <textures>
-            <texture name="diffuse">dragonNeck.png</texture>
-        </textures>
-      </shader>
-  </material> 
-
-<material name="CreatureLight">
-      <shader name="GeomSimpleVertexSuperLight">
-        <textures>
-            <texture name="diffuse">ass_char_tran.png</texture>
-        </textures>
-      </shader>
-    </material> 
-
-<material name="Creature">
-      <shader name="GeomSimpleVertex">
-        <textures>
-            <texture name="diffuse">ass_char_tran.png</texture>
-        </textures>
-      </shader>
-    </material> 
-
-<material name="CreatureHurt">
-      <shader name="GeomSimpleVertexHurt">
-        <textures>
-            <texture name="diffuse">ass_char_tran.png</texture>
-        </textures>
-      </shader>
-    </material> 
-
-    <material name="SparkParticle">
-        <shader type="fixed">
-            <textures>
-                <texture name="diffuse">spark3.png</texture>
-            </textures>
-        </shader>
-    </material>
-
-    <material name="SparkParticleIce">
-        <shader type="fixed">
-            <textures>
-                <texture name="diffuse">spark.png</texture>
-            </textures>
-        </shader>
-    </material>
-
-    <material name="Exclamation">
-        <shader name="GeomFogOnly">
-            <textures>
-                <texture name="diffuse">exclamation.png</texture>
-            </textures>
-        </shader>
-    </material>
-
-    <material name="Question">
-        <shader name="GeomFogOnly">
-            <textures>
-                <texture name="diffuse">question.png</texture>
-            </textures>
-        </shader>
-    </material>
-
-   
-  </materials>
-</polycode>
+<polycode_material_library>
+    <materials>
+        <material name="DungeonWorld" blendingMode="0">
+            <shader name="DefaultShader">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/floor_1.png</texture>
+                </textures>
+                <params>
+                    <param name="shininess" type="Number" value="2.00" />
+                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="specular_color" type="Color" value="0.00 0.00 0.00 1.00" />
+                </params>
+            </shader>
+        </material>
+        <material name="CastleSkin" blendingMode="0">
+            <shader name="DefaultShaderVertex">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/floor_1.png</texture>
+                </textures>
+                <params>
+                    <param name="shininess" type="Number" value="50.00" />
+                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="specular_color" type="Color" value="0.00 0.00 0.00 1.00" />
+                </params>
+            </shader>
+        </material>
+        <material name="CastleSkinWall" blendingMode="0">
+            <shader name="DefaultShader">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/castleWall.png</texture>
+                </textures>
+                <params>
+                    <param name="shininess" type="Number" value="50.00" />
+                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="specular_color" type="Color" value="0.00 0.00 0.00 1.00" />
+                </params>
+            </shader>
+        </material>
+        <material name="LavaSkin" blendingMode="0">
+            <shader name="DefaultShaderVertex">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/floor_lava.png</texture>
+                </textures>
+                <params>
+                    <param name="shininess" type="Number" value="50.00" />
+                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                </params>
+            </shader>
+        </material>
+        <material name="LavaSkinWall" blendingMode="0">
+            <shader name="DefaultShader">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/castleWall.png</texture>
+                </textures>
+                <params>
+                    <param name="shininess" type="Number" value="50.00" />
+                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                </params>
+            </shader>
+        </material>
+        <material name="VillageSkin" blendingMode="0">
+            <shader name="Unlit">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/floor_village.png</texture>
+                </textures>
+            </shader>
+        </material>
+        <material name="VillageSkinWall" blendingMode="0">
+            <shader name="Unlit">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/floor_village.png</texture>
+                </textures>
+            </shader>
+        </material>
+        <material name="IntroWall" blendingMode="0">
+            <shader name="Unlit">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/introWall.png</texture>
+                </textures>
+            </shader>
+        </material>
+        <material name="Slash" blendingMode="1">
+            <shader name="Unlit">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/slash.png</texture>
+                </textures>
+            </shader>
+        </material>
+        <material name="SlashB" blendingMode="1">
+            <shader name="Unlit">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/slash_b.png</texture>
+                </textures>
+            </shader>
+        </material>
+        <material name="Shadow" blendingMode="0">
+            <shader name="Unlit">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/shadow.png</texture>
+                </textures>
+            </shader>
+        </material>
+        <material name="CreatureNoWeapon" blendingMode="0">
+            <shader name="DefaultShader">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/ass_char_tran_noweap.png</texture>
+                </textures>
+                <params>
+                    <param name="shininess" type="Number" value="50.00" />
+                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="specular_color" type="Color" value="0.00 0.00 0.00 1.00" />
+                </params>
+            </shader>
+        </material>
+        <material name="CreatureNoWeaponHurt" blendingMode="0">
+            <shader name="DefaultShader">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/ass_char_tran_noweap.png</texture>
+                </textures>
+                <params>
+                    <param name="shininess" type="Number" value="50.00" />
+                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="specular_color" type="Color" value="0.00 0.00 0.00 1.00" />
+                </params>
+            </shader>
+        </material>
+        <material name="Prop" blendingMode="0">
+            <shader name="DefaultShaderVertex">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/props.png</texture>
+                </textures>
+                <params>
+                    <param name="shininess" type="Number" value="50.00" />
+                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                </params>
+            </shader>
+        </material>
+        <material name="PropLight" blendingMode="0">
+            <shader name="DefaultShaderVertex">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/props.png</texture>
+                </textures>
+                <params>
+                    <param name="shininess" type="Number" value="50.00" />
+                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                </params>
+            </shader>
+        </material>
+        <material name="Lava" blendingMode="0">
+            <shader name="DefaultShader">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/lava.png</texture>
+                </textures>
+                <params>
+                    <param name="shininess" type="Number" value="50.00" />
+                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                </params>
+            </shader>
+        </material>
+        <material name="exitGlow" blendingMode="1">
+            <shader name="Unlit">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/glow.png</texture>
+                </textures>
+            </shader>
+        </material>
+        <material name="Shield" blendingMode="0">
+            <shader name="DefaultShaderVertex">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/shield.png</texture>
+                </textures>
+                <params>
+                    <param name="shininess" type="Number" value="50.00" />
+                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                </params>
+            </shader>
+        </material>
+        <material name="ShieldLight" blendingMode="0">
+            <shader name="DefaultShaderVertex">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/shield.png</texture>
+                </textures>
+                <params>
+                    <param name="shininess" type="Number" value="50.00" />
+                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                </params>
+            </shader>
+        </material>
+        <material name="ShieldHurt" blendingMode="0">
+            <shader name="DefaultShaderVertex">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/shield.png</texture>
+                </textures>
+                <params>
+                    <param name="shininess" type="Number" value="50.00" />
+                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                </params>
+            </shader>
+        </material>
+        <material name="Blood" blendingMode="0">
+            <shader name="DefaultShaderVertex">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/blood.png</texture>
+                </textures>
+                <params>
+                    <param name="shininess" type="Number" value="50.00" />
+                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                </params>
+            </shader>
+        </material>
+        <material name="SkelBlood" blendingMode="0">
+            <shader name="DefaultShaderVertex">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/skelBlood.png</texture>
+                </textures>
+                <params>
+                    <param name="shininess" type="Number" value="50.00" />
+                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                </params>
+            </shader>
+        </material>
+        <material name="GreenBlood" blendingMode="0">
+            <shader name="DefaultShaderVertex">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/greenBlood.png</texture>
+                </textures>
+                <params>
+                    <param name="shininess" type="Number" value="50.00" />
+                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                </params>
+            </shader>
+        </material>
+        <material name="YellowBlood" blendingMode="0">
+            <shader name="DefaultShaderVertex">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/yellowBlood.png</texture>
+                </textures>
+                <params>
+                    <param name="shininess" type="Number" value="50.00" />
+                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                </params>
+            </shader>
+        </material>
+        <material name="BlackBlood" blendingMode="0">
+            <shader name="DefaultShaderVertex">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/blackBlood.png</texture>
+                </textures>
+                <params>
+                    <param name="shininess" type="Number" value="50.00" />
+                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                </params>
+            </shader>
+        </material>
+        <material name="WoodBlood" blendingMode="0">
+            <shader name="DefaultShaderVertex">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/woodBlood.png</texture>
+                </textures>
+                <params>
+                    <param name="shininess" type="Number" value="50.00" />
+                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                </params>
+            </shader>
+        </material>
+        <material name="Heart" blendingMode="0">
+            <shader name="Unlit">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/heart.png</texture>
+                </textures>
+            </shader>
+        </material>
+        <material name="Golds" blendingMode="0">
+            <shader name="Unlit">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/golds.png</texture>
+                </textures>
+            </shader>
+        </material>
+        <material name="Arrow" blendingMode="0">
+            <shader name="DefaultShaderVertex">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/arrow.png</texture>
+                </textures>
+                <params>
+                    <param name="shininess" type="Number" value="50.00" />
+                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                </params>
+            </shader>
+        </material>
+        <material name="DragonBodyAttack" blendingMode="0">
+            <shader name="DefaultShaderVertex">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/dragonBodyFullAttack.png</texture>
+                </textures>
+                <params>
+                    <param name="shininess" type="Number" value="50.00" />
+                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                </params>
+            </shader>
+        </material>
+        <material name="DragonBody" blendingMode="0">
+            <shader name="DefaultShaderVertex">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/dragonBodyFull.png</texture>
+                </textures>
+                <params>
+                    <param name="shininess" type="Number" value="50.00" />
+                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                </params>
+            </shader>
+        </material>
+        <material name="DragonBodyLight" blendingMode="0">
+            <shader name="DefaultShaderVertex">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/dragonBodyFull.png</texture>
+                </textures>
+                <params>
+                    <param name="shininess" type="Number" value="50.00" />
+                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                </params>
+            </shader>
+        </material>
+        <material name="DragonBodyHurt" blendingMode="0">
+            <shader name="DefaultShaderVertex">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/dragonBodyFull.png</texture>
+                </textures>
+                <params>
+                    <param name="shininess" type="Number" value="50.00" />
+                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                </params>
+            </shader>
+        </material>
+        <material name="DragonHead" blendingMode="0">
+            <shader name="DefaultShaderVertex">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/dragonHead.png</texture>
+                </textures>
+                <params>
+                    <param name="shininess" type="Number" value="50.00" />
+                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                </params>
+            </shader>
+        </material>
+        <material name="DragonNeck" blendingMode="0">
+            <shader name="DefaultShaderVertex">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/dragonNeck.png</texture>
+                </textures>
+                <params>
+                    <param name="shininess" type="Number" value="50.00" />
+                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                </params>
+            </shader>
+        </material>
+        <material name="CreatureLight" blendingMode="0">
+            <shader name="DefaultShader">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/ass_char_tran.png</texture>
+                </textures>
+                <params>
+                    <param name="shininess" type="Number" value="50.00" />
+                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="specular_color" type="Color" value="0.00 0.00 0.00 1.00" />
+                </params>
+            </shader>
+        </material>
+        <material name="Creature" blendingMode="0">
+            <shader name="DefaultShader">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/ass_char_tran.png</texture>
+                </textures>
+                <params>
+                    <param name="shininess" type="Number" value="50.00" />
+                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="specular_color" type="Color" value="0.00 0.00 0.00 1.00" />
+                </params>
+            </shader>
+        </material>
+        <material name="CreatureHurt" blendingMode="0">
+            <shader name="DefaultShader">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/ass_char_tran.png</texture>
+                </textures>
+                <params>
+                    <param name="shininess" type="Number" value="50.00" />
+                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="specular_color" type="Color" value="0.00 0.00 0.00 1.00" />
+                </params>
+            </shader>
+        </material>
+        <material name="SparkParticle" blendingMode="0">
+            <shader name="Unlit">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/spark3.png</texture>
+                </textures>
+            </shader>
+        </material>
+        <material name="SparkParticleIce" blendingMode="0">
+            <shader name="Unlit">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/spark.png</texture>
+                </textures>
+            </shader>
+        </material>
+        <material name="Exclamation" blendingMode="0">
+            <shader name="Unlit">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/exclamation.png</texture>
+                </textures>
+            </shader>
+        </material>
+        <material name="Question" blendingMode="0">
+            <shader name="Unlit">
+                <textures>
+                    <texture name="diffuse">Resources/gfx/question.png</texture>
+                </textures>
+            </shader>
+        </material>
+    </materials>
+</polycode_material_library>
