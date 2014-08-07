@@ -1,23 +1,23 @@
+-- Character selection screen
 
 class "CharPicker" (Scene)
 
 function CharPicker:CharPicker()
-    Scene.Scene(self)
-    self.pickerScreen = Screen()
-
-    self.archerLabel = ScreenLabel("ARCHER (HARD)", 64, "main")
-    self.archerLabel.position.x = (800-self.archerLabel:getWidth())/2
-    self.archerLabel.position.y = (300-self.archerLabel:getHeight())/2
+    Scene.Scene(self, Scene.SCENE_3D)
+    self.pickerScreen = Scene(Scene.SCENE_2D)
+	self.archerLabel = SceneLabel("ARCHER (HARD)", 64, "main")
+    self.archerLabel:setPositionX((800-self.archerLabel:getWidth())/2)
+    self.archerLabel:setPositionY((300-self.archerLabel:getHeight())/2)
     self.pickerScreen:addChild(self.archerLabel)
 
-    self.knightLabel = ScreenLabel("KNIGHT (EASY)", 64, "main")
-    self.knightLabel.position.x = (800-self.knightLabel:getWidth())/2
-    self.knightLabel.position.y = (300-self.knightLabel:getHeight())/2
+    self.knightLabel = SceneLabel("KNIGHT (EASY)", 64, "main")
+    self.knightLabel:setPositionX((800-self.knightLabel:getWidth())/2)
+    self.knightLabel:setPositionY((300-self.knightLabel:getHeight())/2)
     self.pickerScreen:addChild(self.knightLabel)
 
-    self.wizardLabel = ScreenLabel("WIZZARD (MEDIUM)", 64, "main")
-    self.wizardLabel.position.x = (800-self.wizardLabel:getWidth())/2
-    self.wizardLabel.position.y = (300-self.wizardLabel:getHeight())/2
+    self.wizardLabel = SceneLabel("WIZZARD (MEDIUM)", 64, "main")
+    self.wizardLabel:setPositionX((800-self.wizardLabel:getWidth())/2)
+    self.wizardLabel:setPositionY((300-self.wizardLabel:getHeight())/2)
     self.pickerScreen:addChild(self.wizardLabel)
 
     self.pickerScreen.enabled = false
@@ -26,7 +26,7 @@ function CharPicker:CharPicker()
     self.ambientColor.g = 1
     self.ambientColor.b = 1
 
-    self.rotator = SceneEntity()
+    self.rotator = Entity()
     self:addChild(self.rotator)
 
     self:getDefaultCamera():setPosition(0.01,0.1,0.6)
@@ -57,7 +57,7 @@ function CharPicker:Update(e)
     self.wizard:Update(e)
     self.knight:Update(e)
 
-    self.rotator.rotation.yaw = self.choice*115
+    self.rotator:setYaw(self.choice*115)
 
     self.archerLabel.visible = false
     self.knightLabel.visible = false

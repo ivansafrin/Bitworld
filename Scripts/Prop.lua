@@ -1,26 +1,23 @@
 
-class "Prop" (SceneEntity)
+class "Prop" (Entity)
 
 function Prop:Prop(propIndex)
-    SceneEntity.SceneEntity(self)
+    Entity.Entity(self)
 
-    self.scale = 0.3 * 0.25
-    local scale = self.scale
+	self.ownsChildren = true
+
+    self.__scale = 0.3 * 0.25
+    local scale = self.__scale
 
     self.shadow = ScenePrimitive(ScenePrimitive.TYPE_PLANE, 0.15,0.15,0)
-    self.shadow.position.y = 0.001
-    self.shadow.position.x = 0.04
-    self.shadow.position.z = -0.00
+    self.shadow:setPosition(0.001, 0.04, -0.00)
     self.shadow:setColor(1,1,1,0.58)
-    self.shadow:setMaterialByName("Shadow")
-    self:addChild(self.shadow)
+    self.shadow:setMaterialByName("Shadow", Services.ResourceManager:getGlobalPool())
+--    self:addChild(self.shadow)
 
     local bodyMesh = Mesh(Mesh.TRI_MESH)
+	bodyMesh.indexedMesh = false
     local sheight = scale  
-
-  i = 0
-  j = 0
-
 
     local indexX = ((propIndex-1) % 16)
     local indexY = 1 - math.floor(propIndex/16)
@@ -30,28 +27,20 @@ function Prop:Prop(propIndex)
     cellSizeX = 1/16
     cellSizeY = 1/2
 
-  
-   newPoly = Polygon()
-  newPoly:addVertex((i*self.scale)+scale,0,(j*scale),(indexX * cellSizeX) + cellSizeX,indexY*cellSizeY)  
-        newPoly:addVertex((i*scale)+scale,sheight,(j*scale),(indexX * cellSizeX) + cellSizeX,(indexY * cellSizeY) + cellSizeY)
-  newPoly:addVertex((i*scale),sheight,(j*scale),indexX*cellSizeX,(indexY * cellSizeY) + cellSizeY)
-
-     bodyMesh:addPolygon(newPoly)    
+	bodyMesh:addVertex(scale,0, 0,(indexX * cellSizeX) + cellSizeX,indexY*cellSizeY)  
+	bodyMesh:addVertex(scale,sheight,0,(indexX * cellSizeX) + cellSizeX,(indexY * cellSizeY) + cellSizeY)
+	bodyMesh:addVertex(0, sheight,0,indexX*cellSizeX,(indexY * cellSizeY) + cellSizeY)
  
-        newPoly = Polygon()
-        newPoly:addVertex((i*scale),0,(j*scale),(indexX * cellSizeX),(indexY * cellSizeY))       
-  newPoly:addVertex((i*scale)+scale,0,(j*scale),(indexX * cellSizeX)+cellSizeX,(indexY * cellSizeY))  
-  newPoly:addVertex((i*scale),sheight,(j*scale),(indexX * cellSizeX),(indexY * cellSizeY)+cellSizeY)
-     bodyMesh:addPolygon(newPoly)    
+	bodyMesh:addVertex(0,0,0,(indexX * cellSizeX),(indexY * cellSizeY))       
+	bodyMesh:addVertex(0+scale,0,0,(indexX * cellSizeX)+cellSizeX,(indexY * cellSizeY))  
+	bodyMesh:addVertex(0,sheight,0,(indexX * cellSizeX),(indexY * cellSizeY)+cellSizeY)
   
-  bodyMesh:calculateNormals()
-  self.body = SceneMesh.SceneMeshFromMesh(bodyMesh)
+	bodyMesh:calculateNormals()
+	self.body = SceneMesh.SceneMeshFromMesh(bodyMesh)
 
---    self.body:cacheToVertexBuffer(true)
-    self.body.billboardMode = true
-    self.body.billboardRoll = true
-  self.body:setMaterialByName("Prop")
-    self.body.alphaTest = true
-
-  self:addChild(self.body)
+	self.body.billboardMode = true
+	self.body.billboardRoll = true
+	self.body:setMaterialByName("Prop", Services.ResourceManager:getGlobalPool())
+	self.body.alphaTest = true
+	self:addChild(self.body)
 end

@@ -14,12 +14,8 @@ require "Scripts/Player"
 require "Scripts/HUD"
 require "Scripts/TalkUI"
 
--- Set the texture filtering mode to "nearest" so that pixelart doesnt get blurry
-Services.Renderer:setTextureFilteringMode(Renderer.TEX_FILTERING_NEAREST)
-Services.Renderer:setClippingPlanes(0.01, 100.0)
-
--- Register our font under the name "main"
-Services.FontManager:registerFont("main", "Resources/fonts/fatkiddl2.ttf")
+Services.Core:setVideoMode(1280,800,true, true, 0, 0, false)
+--Services.Core:enableMouse(false)
 
 -- Game globals
 firstFrame = false
@@ -27,90 +23,42 @@ gameLoaded = false
 playerHP = 8
 playerClass = "wizard"
 
+pauseVal = 0
+
 talkUI = TalkUI()
 talkUI.enabled = false
 talking = false
 talkToNPC = nil
-talkTip = Screen()
-local rect = ScreenShape(ScreenShape.SHAPE_RECT, 800, 40, 0,0)
-rect:setPositionMode(ScreenEntity.POSITION_TOPLEFT)
-rect.position.y = 600 - 40
+talkTip = Scene(Scene.SCENE_2D)
+talkTip:getDefaultCamera():setOrthoSize(0.0, 640)
+
+local rect = ScenePrimitive(ScenePrimitive.TYPE_VPLANE, 800, 40)
 rect:setColor(0,0,0,1)
 talkTip:addChild(rect)
-local tipLabel = ScreenLabel("PRESS X TO TALK!", 34, "main")
-tipLabel.position.x = (800-tipLabel.width)/2
-tipLabel.position.y = 600 - 45
+local tipLabel = SceneLabel("PRESS X TO TALK!", 34, "main")
 talkTip:addChild(tipLabel)
 talkTip.enabled = false
 
 
-menuScreen = Screen()
-
-local mRect = ScreenShape(ScreenShape.SHAPE_RECT,230, 600,0,0)
-mRect:setPositionMode(ScreenEntity.POSITION_TOPLEFT)
-menuScreen:addChild(mRect)
-mRect:setColor(0,0,0,1)
-
-mRect = ScreenShape(ScreenShape.SHAPE_RECT,230, 600,0,0)
-mRect:setPositionMode(ScreenEntity.POSITION_TOPLEFT)
-menuScreen:addChild(mRect)
-mRect:setColor(0,0,0,1)
-mRect:setPosition(800-230,0)
-
-
-menuSelectRect = ScreenShape(ScreenShape.SHAPE_RECT,305, 26,0,0)
-menuSelectRect:setPosition(250,100)
-menuSelectRect:setPositionMode(ScreenEntity.POSITION_TOPLEFT)
-menuScreen:addChild(menuSelectRect)
-menuSelectRect:setColor(1,1,1,0.2)
-
-
-titleLabel = ScreenLabel("BITWORLD", 80, "main")
-titleLabel.position.x = (800-titleLabel.width)/2
-titleLabel.position.y = (200-titleLabel.height)/2
-menuScreen:addChild(titleLabel)
-
-
-startLabel = ScreenLabel("NEW GAME", 34, "main")
-startLabel:setPositionX((800-startLabel:getWidth())/2)
-startLabel:setPositionY(titleLabel:getPosition().y + 80)
-startLabel:setColor(1,1,1,0.75)
-menuScreen:addChild(startLabel)
-
-exitLabel = ScreenLabel("EXIT GAME", 34, "main")
-exitLabel:setPositionX((800-exitLabel:getWidth())/2)
-exitLabel:setPositionY(startLabel:getPosition().y + 30)
-exitLabel:setColor(1,1,1,0.75)
-menuScreen:addChild(exitLabel)
-
-menuChoice = 0 
-menuScreen.enabled = false
-
-
 hud = HUD()
 
-fadeSpeed = 0.4
 
-loadingScreen = Screen()
+loadingScreen = Scene(Scene.SCENE_2D)
 
-loadingBlock = ScreenShape(ScreenShape.SHAPE_RECT,800,600,0,0)
-loadingBlock:setPositionMode(ScreenEntity.POSITION_TOPLEFT)
+loadingBlock = ScenePrimitive(ScenePrimitive.TYPE_VPLANE,1200,600,0,0)
 loadingScreen:addChild(loadingBlock)
 loadingBlock:setColor(0,0,0,1)
+loadingBlock.depthTest = false
+loadingBlock.depthWrite = false
+loadingBlock:setBlendingMode(Renderer.BLEND_MODE_NORMAL)
 
-loading1 = ScreenImage("Resources/gfx/loading1.png")
-loading1:setPositionX((800-loading1:getWidth())/2)
-loading1:setPositionY((600-loading1:getHeight())/2)
+loading1 = SceneImage("Resources/gfx/loading1.png")
 loadingScreen:addChild(loading1)
 
-loading2 = ScreenImage("Resources/gfx/loading2.png")
-loading2:setPositionX((800-loading2:getWidth())/2)
-loading2:setPositionY((600-loading2:getHeight())/2)
+loading2 = SceneImage("Resources/gfx/loading2.png")
 loadingScreen:addChild(loading2)
 
-loading3 = ScreenImage("Resources/gfx/loading3.png")
-loading3:setPositionX((800-loading3:getWidth())/2)
-loading3:setPositionY((600-loading3:getHeight())/2)
+loading3 = SceneImage("Resources/gfx/loading3.png")
 loadingScreen:addChild(loading3)
 
 loadingImages = {loading1, loading2, loading3}
@@ -122,15 +70,12 @@ shakeHard = false
 rollingCredits = false
 
 
-creditsScreen = Screen()
-creditsAnchor = ScreenEntity()
+creditsScreen = Scene(Scene.SCENE_2D)
+creditsAnchor = Entity()
 
-local creditRect = ScreenShape(ScreenShape.SHAPE_RECT,800, 600,0,0)
-creditRect:setPositionMode(ScreenEntity.POSITION_TOPLEFT)
+local creditRect = ScenePrimitive(ScenePrimitive.TYPE_VPLANE,800, 600,0,0)
 creditsScreen:addChild(creditRect)
 creditRect:setColor(0,0,0,1)
-
-
 creditsScreen:addChild(creditsAnchor)
 
 creditLines = {"","BITWORLD","","","BUILT USING","POLYCODE","FOR THE TIGSOURCE","ASSEMBLEE COMPETITION",
@@ -139,22 +84,15 @@ creditLines = {"","BITWORLD","","","BUILT USING","POLYCODE","FOR THE TIGSOURCE",
 "","","SHOUTOUTS TO THE GOOD PEOPLE OF","TIGSOURCE","","","","","","","","THANK YOU FOR PLAYING"}
 
 for i=1,#creditLines do
-	local creditLabel = ScreenLabel(creditLines[i], 34, "main")
-	creditLabel.x = (800-creditLabel:getWidth())/2
-	creditLabel.y = i*32
+	local creditLabel = SceneLabel(creditLines[i], 34, "main")
+--	creditLabel.x = (800-creditLabel:getWidth())/2
+--	creditLabel.y = i*32
 	creditsAnchor:addChild(creditLabel)
 end
 
 creditsScreen.enabled = false
 rollingCredits = false
 
-faderScreen = Screen()
-faderRect = ScreenShape(ScreenShape.SHAPE_RECT,800, 600,0,0)
-faderRect:setPositionMode(ScreenEntity.POSITION_TOPLEFT)
-faderScreen:addChild(faderRect)
-faderRect:setColor(0,0,0,0)
-faderVal = 0
-fadingIn = false
 
 function endCredits()
 	shakeHard = false
@@ -162,13 +100,13 @@ function endCredits()
 	creditsScreen.enabled = false
 	rollingCredits = false
 	showingFinalCutscene = false
-	hud.enabled = false
+	hud:showGameHUD(false)
 	restartGame()
 end
 
 function scrollCredits()
 	rumblingSound:Stop()
-	villageMusic:Play(true)
+	villageMusic:Play()
 	creditsScreen.enabled = true
 	rollingCredits = true
 	creditsAnchor.y = 600 + 20
@@ -178,9 +116,9 @@ function doGameEnd()
 	showingFinalCutscene = true
 	level.player:setSpeed(0,0)	
 	music:Stop()
-	rumblingSound:Play(false)
+	rumblingSound:Play()
 	shakeHard = true
-	fadeOut(0.1, scrollCredits)
+	hud:fadeOut(0.1, scrollCredits)
 end
 
 function showLoadingScreen()
@@ -195,15 +133,14 @@ end
 
 showLoadingScreen()
 
-gameOverScreen = Screen()
+gameOverScreen = Scene(Scene.SCENE_2D)
 
-blockRect = ScreenShape(ScreenShape.SHAPE_RECT,800, 600,0,0)
-blockRect:setPositionMode(ScreenEntity.POSITION_TOPLEFT)
+blockRect = ScenePrimitive(ScenePrimitive.TYPE_VPLANE,800, 600,0,0)
 gameOverScreen:addChild(blockRect)
+blockRect.depthWrite = false
+blockRect.depthTest = false
 
-label = ScreenLabel("YOU HAVE DIED..", 34, "main")
-label.x = (800-label:getWidth())/2
-label.y = (600-label:getHeight())/2
+label = SceneLabel("YOU HAVE DIED..", 34, "main")
 gameOverScreen:addChild(label)
 
 gameOverScreen.enabled = false
@@ -238,7 +175,6 @@ camCurveVal = 0.6
 onExit = false
 onFadeEnd = nil
 
-fadingOut = false
 
 levelRotate = false
 levelRotateVal = 0
@@ -247,35 +183,34 @@ levelRotateSound = Sound("Resources/sfx/levelRotate.wav")
 showingCharPicker = false
 
 function initGame()
+
+	-- load materials and graphics
+
 	Services.ResourceManager:addDirResource("Resources/gfx", false)
 	Services.ResourceManager:addDirResource("Resources/shaders", false)
 	Services.ResourceManager:addDirResource("Resources/materials", false)
 
+	-- load sounds
+
 	alertSound = Sound("Resources/sfx/alert.wav")  
 	whereSound = Sound("Resources/sfx/where.wav")  
-
 	jumpSound = Sound("Resources/sfx/jump03.wav")	
 	hurtSound = Sound("Resources/sfx/ouch.wav")
 	dummyHurtSound = Sound("Resources/sfx/dummyHurt.wav")
 	attackSound = Sound("Resources/sfx/slash.wav")
 	arrowShootSound = Sound("Resources/sfx/shieldDown.wav")
-
 	rumblingSound = Sound("Resources/sfx/rumbling.wav")
-
 	heartPickupSound = Sound("Resources/sfx/heartPickup.wav")
 	goldPickupSound = Sound("Resources/sfx/goldPickup.wav")
-
 	shieldHitSound = Sound("Resources/sfx/shieldHit.wav")
 	shieldUpSound = Sound("Resources/sfx/shieldUp.wav")
 	shieldDownSound = Sound("Resources/sfx/shieldDown.wav")
-
 	cloakSound = Sound("Resources/sfx/cloak.wav")
 	uncloakSound = Sound("Resources/sfx/uncloak.wav")
-
 	typeSound = Sound("Resources/sfx/type.wav")
-
 	arrowChargeSound = Sound("Resources/sfx/arrowCharge.wav")
 
+	-- load music
 	introMusic = Sound("Resources/music/intro.ogg")
 	villageMusic = Sound("Resources/music/village.ogg")
 
@@ -289,12 +224,11 @@ function initGame()
 
 		gameoverMusic = Sound("Resources/music/gameover.ogg")
 		--gameoverMusic = music
-
 end
 
 function pickChars()
-	faderRect:setColor(0,0,0,0)
-	menuScreen.enabled = false
+	hud:Clear()
+	hud.mainMenu:Hide()
 	Services.Renderer:setClearColor(0.1,0.1,0.1)
 	showingVillage = false
 	villageLevel.enabled = false
@@ -303,17 +237,21 @@ function pickChars()
 	showingCharPicker = true
 end
 
-function initLevel()
+hud.mainMenu.newGame = pickChars
 
+function initLevel()
 	paused = false
 	--math.randomseed(Services.Core:getTicks())
 	--math.randomseed(80085)	
-	hud.enabled = false
+	hud:showGameHUD(false)
 
 	villageLevel = Level("village", "VillageSkin", {})
-	villageLevel.ambientColor.r = 0.7
-	villageLevel.ambientColor.g =  0.65
-	villageLevel.ambientColor.b =  0.6
+	villageLevel.ambientColor.r = 0.9
+	villageLevel.ambientColor.g =  0.85
+	villageLevel.ambientColor.b =  0.8
+
+	villageLevel:setFogProperties(0, Color(1.0, 1.0, 1.0, 1.0), 0.3, 2.0, 10.0);
+	villageLevel:enableFog(true)
 
 	villageCam = villageLevel:getDefaultCamera()
 	--villageCam:setPostFilter("Pixellate")
@@ -322,6 +260,9 @@ function initLevel()
 
 	charPicker = CharPicker()
 	charPicker.enabled = false
+
+	Services.SceneManager:removeScene(hud)
+	Services.SceneManager:addScene(hud)
 
 	--introDone()
 	showIntro()
@@ -333,21 +274,6 @@ function showVillageLevel()
 	Services.Renderer:setClearColor(0.4,0.6,0.7)
 end
 
-function fadeIn()
-	faderVal = 1
-	faderRect:setColor(0,0,0,1)
-	fadingIn = true
-end
-
-function fadeOut(fspeed,endFunc)
-	onFadeEnd = endFunc
-	fadeSpeed = fspeed
-	faderScreen.enabled = true
-	faderVal = 0
-	faderRect:setColor(0,0,0,0)
-	fadingIn = false
-	fadingOut = true
-end
 
 function introDone()
 	if intro ~= nil then 
@@ -355,9 +281,9 @@ function introDone()
 		intro.enabled = false
 	end
 
-	menuScreen.enabled = true
+	hud.mainMenu:Show()
 	showVillageLevel()
-	fadeIn()
+	hud:fadeIn()
 end
 
 function showIntro()
@@ -372,14 +298,14 @@ function updateVillageCam(e)
 	if camCurveVal > 1 then camCurveVal = 0 end
 	local pos =  villageCamCurve:getPointAt(camCurveVal)
 	villageCam:setPosition(pos.x, pos.y, pos.z) 
-	villageCam.fov = 65
+	villageCam:setFOV(45)
 	villageCam:lookAt(Vector3(0,0,0), Vector3(0,1,0))
 end
 
 function createNewLevel()
 	levelRotate = false
 
-	hud.enabled = true
+	hud:showGameHUD(true)
 	local levelTemplate = levelStructure[levelIndex]
 	print(levelTemplate.caption)
 
@@ -393,7 +319,7 @@ function createNewLevel()
 	perlinPosition = 0
 
 	camera = level:getDefaultCamera()
-	camera.fov = 65
+	camera:setFOV(45)
 --	camera:setPostFilter("Pixellate")
 
 	levelLoaded = true
@@ -415,9 +341,10 @@ function createNewLevel()
 	level.ambientColor.g = levelTemplate.ambientG
 	level.ambientColor.b = levelTemplate.ambientB
 
-	Services.Renderer:setClearColor(levelTemplate.fogR/255.0,levelTemplate.fogG/255.0,levelTemplate.fogB/255.0)
+	level:setFogProperties(0, Color(levelTemplate.fogR/255.0,levelTemplate.fogG/255.0,levelTemplate.fogB/255.0, 1.0), 0.3, 2.0, 10.0);
+	level:enableFog(true)
 
-	light = SceneLight(SceneLight.AREA_LIGHT, level, 2.0)
+	light = SceneLight(SceneLight.POINT_LIGHT, level, 2.0)
 	light:setLightColor(1,0.9,0.8)
 	level:addLight(light)
 	player.bodyAnchor:addChild(light)
@@ -430,8 +357,10 @@ function createNewLevel()
 
 	music:Stop()
 	music = musics[levelTemplate.musicIndex]
-	music:Play(false)
+	music:Play()
 
+	Services.SceneManager:removeScene(hud)
+	Services.SceneManager:addScene(hud)
 end
 
 function loadFirstDungeonLevel()
@@ -448,18 +377,18 @@ end
 
 function restartGame()
 	gameoverMusic:Stop()
-	introMusic:Play(false)
+	introMusic:Play()
 	cleanCurrentLevel()
 	isGameOver = false
 	gameOverScreen.enabled = false
 	showVillageLevel()
-	menuScreen.enabled = true
+	hud.mainMenu:Show()
 end
 
 function newGame()
 
 	introMusic:Stop()
-	villageMusic:Play(false)
+	villageMusic:Play()
 
 	if playerClass == "wizard" then
 		playerHP = 4
@@ -496,13 +425,13 @@ function newGame()
 
 	levelLoaded = true
 	level = villageLevel
-	hud.enabled = true
+	hud:showGameHUD(true)
 end
 
 function doGameOver()
 		music:Stop()
-		gameoverMusic:Play(true)
-		hud.enabled = false
+		gameoverMusic:Play()
+		hud:showGameHUD(false)
 		gameOverScreen.enabled = true
 		isGameOver = true
 		blockRect:setColor(0,0,0,0)
@@ -517,7 +446,7 @@ function loadNextLevel()
 		gameoverMusic:Stop()
 	cleanCurrentLevel()
 	music:Stop()
-	hud.enabled = false
+	hud:showGameHUD(false)
 	showLoadingScreen()
 	loadMapNextFrame = true
 	levelIndex = levelIndex+1
@@ -526,6 +455,8 @@ end
 function cleanCurrentLevel()
 	levelLoaded = false
 	level.enabled = false
+	level.ownsChildren = true
+	delete(level)
 	level = nil
 	player = nil
 	collectgarbage("collect")
@@ -535,7 +466,7 @@ function onKeyDown(key)
 
 	if rollingCredits == true then
 		if key == KEY_ESCAPE then
-			fadeOut(0.3,endCredits)
+			hud:fadeOut(0.3,endCredits)
 		end
 	end
 
@@ -560,24 +491,8 @@ function onKeyDown(key)
 		return
 	end
 
-	if menuScreen.enabled == true then
-		if key == KEY_DOWN then
-			menuChoice = menuChoice + 1
-			if menuChoice > 1 then
-			   menuChoice = 0 
-			end
-		elseif key == KEY_UP then
-			menuChoice = menuChoice - 1
-			if menuChoice < 0 then
-			   menuChoice = 1 
-			end
-		elseif key == KEY_RETURN then
-			if menuChoice == 0 then
-				pickChars()
-			elseif menuChoice == 1 then
-				Services.Core:Shutdown()
-			end
-		end
+	if hud.mainMenu.visible == true then
+		hud.mainMenu:onKeyDown(key)
 		return
 	end
 
@@ -679,7 +594,7 @@ function onKeyUp(key)
 
 	if showingIntro == true then return end
 
-  if menuScreen.enabled == true or showingCharPicker == true then return end
+  if hud.mainMenu.visible == true or showingCharPicker == true then return end
 
   if levelLoaded == false then
 	return
@@ -746,7 +661,7 @@ function updateLevel(e)
 		perlinPosition = perlinPosition + (e * 0.5)  
 		camera:lookAt(Vector3(player:getPosition().x+(camPerlin:Get(perlinPosition, 0)*0.3),
 		player:getPosition().y+(camPerlin:Get(perlinPosition, 0.5)*0.3),
-		player:getPosition().z+(camPerlin:Get(perlinPosition, 1)*0.3)))
+		player:getPosition().z+(camPerlin:Get(perlinPosition, 1)*0.3)), Vector3(0.0, 1.0, 0.0))
 	else
 		camera:lookAt(player:getPosition(), Vector3(0,1,0))
 	end
@@ -755,7 +670,6 @@ function updateLevel(e)
 	if paused == true then
 	else
 		player:Update(e)
-		hud:Update(e)
 		level:Update(e)
 	end
 end
@@ -766,14 +680,21 @@ end
 
 function Update(e)
 
+	hud:Update(e)
+
+	if pauseVal > 0 then
+		pauseVal = pauseVal - e
+		return
+	end
+
 	-- If the credits are rolling, move the anchor entity of the credits up based on elapsed time.
 	if rollingCredits == true then
-		creditsAnchor.position.y = creditsAnchor.position.y - (e * 35)
+		creditsAnchor:setPositionY(creditsAnchor:getPosition().y - (e * 35))
 
 		-- If the credits scroll past a certain point, fade out and end the credits.
-		if creditsAnchor.position.y < -1376 then
+		if creditsAnchor:getPosition().y < -1376 then
 			rollingCredits = false
-			fadeOut(0.2,endCredits)
+			hud:fadeOut(0.2,endCredits)
 		end
 	end
 
@@ -787,24 +708,6 @@ function Update(e)
 		charPicker:Update(e)
 		return
 	end
-
-	-- If showing the menu screen, set the menu selector position based on the current choice.
-	if menuScreen.enabled == true then
-		menuSelectRect.position.x = 262-20
-		menuSelectRect.position.y = titleLabel.position.y + 95+(30*menuChoice)
-	end
-
-	-- If we're fading out the screen, update the fade value based on time elapsed and check if we're done fading out.
-	if fadingOut == true then
-		faderVal = faderVal + (e * fadeSpeed)
-		if faderVal > 1 then fadingOut = false faderScreen.enabled = false faderVal = 1 if onFadeEnd ~= nil then onFadeEnd()  end end
-	end
-
-	if fadingIn == true then
-		faderVal = faderVal - (e * 0.4)
-		if faderVal < 0 then faderVal = 0 end
-	end
-	faderRect:setColor(0,0,0,faderVal)
 
 	if showingVillage == true then
 		updateVillageCam(e)		
@@ -838,11 +741,11 @@ function Update(e)
 	else
 		if levelLoaded == true then
 		if player.archer == true then
-			hud.powerRect.scale.x = player.arrowCharge/5
+			hud.powerRect:setScaleX(player.arrowCharge/5)
 		elseif player.caster == true then
-			hud.powerRect.scale.x = player.spellCharge/player.spellChargeMax
+			hud.powerRect:setScaleX(player.spellCharge/player.spellChargeMax)
 		else
-			hud.powerRect.scale.x = 0
+			hud.powerRect:setScaleX(0)
 		end
 
 		local pos = level:tileToPosition(level.levelEndX, level.levelEndY)
@@ -864,7 +767,7 @@ function Update(e)
 	
 		hud:updateHP(player.HP)
 		hud:updateGold(player.gold)
-		updateLevel(e)
+			updateLevel(e)
 		else
 
 		end

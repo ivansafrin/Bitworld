@@ -3,103 +3,98 @@ class "Intro" (Scene)
 
 
 function Intro:Intro()
-        Scene.Scene(self)
+        Scene.Scene(self, Scene.SCENE_3D)
 
-        self.introScreen = Screen()
+        self.introScreen = Scene(Scene.SCENE_2D)
+		self.introScreen:getDefaultCamera():setOrthoSize(0.0, 160)
 
-        self.tigsLabel = ScreenLabel("TIGSOURCE ASSEMBLEE COMPETITION", 34, "main")
-        self.tigsLabel.x = (800-self.tigsLabel:getWidth())/2
-        self.tigsLabel.y = (600-self.tigsLabel:getHeight())/2
+        self.tigsLabel = SceneLabel("TIGSOURCE ASSEMBLEE COMPETITION", 8, "main")
         self.introScreen:addChild(self.tigsLabel)
         self.tigsLabel:setColor(1,1,1,0)
 
-        self.presents = ScreenLabel("PRESENTS", 34, "main")
-        self.presents.x = (800-self.presents:getWidth())/2
-        self.presents.y = (600-self.presents:getHeight())/2
+        self.presents = SceneLabel("PRESENTS", 8, "main")
         self.introScreen:addChild(self.presents)
         self.presents:setColor(1,1,1,0)
 
-        self.gameBy = ScreenLabel("A GAME BY IVAN SAFRIN", 34, "main")
-        self.gameBy.x = (800-self.gameBy:getWidth())/2
-        self.gameBy.y = (600-self.gameBy:getHeight())/2
+        self.gameBy = SceneLabel("A GAME BY IVAN SAFRIN", 8, "main")
         self.introScreen:addChild(self.gameBy)
         self.gameBy:setColor(1,1,1,0)
 
-
-        self.credits = ScreenEntity()
+        self.credits = Entity()
         self.introScreen:addChild(self.credits)
         self.credits:setColor(1,1,1,0)
 
-        local tempLabel = ScreenLabel("WITH GRAPHICS BY ODDBALL,ORYX AND RYNEN10K", 34, "main")
-        tempLabel.x = (800-tempLabel:getWidth())/2
-        tempLabel.y = (500-tempLabel:getHeight())/2
+        local tempLabel = SceneLabel("WITH GRAPHICS BY ODDBALL,ORYX AND RYNEN10K", 8, "main")
+		tempLabel:setPositionY(-16)
         self.credits:addChild(tempLabel)
 
-        tempLabel = ScreenLabel("MUSIC BY BLOT AND SAROS", 34, "main")
-        tempLabel.x = (800-tempLabel:getWidth())/2
-        tempLabel.y = ((500-tempLabel:getHeight())/2) + 40
+        tempLabel = SceneLabel("MUSIC BY BLOT AND SAROS", 8, "main")
         self.credits:addChild(tempLabel)
 
-        tempLabel = ScreenLabel("SFX BY STIAN STARK AND BIGLON", 34, "main")
-        tempLabel.x = (800-tempLabel:getWidth())/2
-        tempLabel.y = ((500-tempLabel:getHeight())/2) + 80
+        tempLabel = SceneLabel("SFX BY STIAN STARK AND BIGLON", 8, "main")
+		tempLabel:setPositionY(16)
         self.credits:addChild(tempLabel)
 
-        self.blockRect = ScreenShape(ScreenShape.SHAPE_RECT,800, 600,0,0)
-        self.blockRect:setPositionMode(ScreenEntity.POSITION_TOPLEFT)
+        self.blockRect = ScenePrimitive(ScenePrimitive.TYPE_VPLANE,1200, 600,0,0)
         self.introScreen:addChild(self.blockRect)
         self.blockRect:setColor(0,0,0,0)
-    
+		self.blockRect:setBlendingMode(Renderer.BLEND_MODE_NORMAL)    
+		self.blockRect.depthWrite = false
+		self.blockRect.depthTest = false
+		self.blockRect:setBlendingMode(Renderer.BLEND_MODE_NORMAL)
+
         self.introTimeline = 0
 
-        self.wall = ScenePrimitive(ScenePrimitive.TYPE_VPLANE, 3,9,0)
-        self.wall:Translate(-1,2,-1)
-        self.wall:setMaterialByName("IntroWall")
+        self.wall = ScenePrimitive(ScenePrimitive.TYPE_VPLANE, 5.0,10,0)
+		self.wall.depthWrite = false
+        self.wall:Translate(-0.9,2,-1)
+        self.wall:setMaterialByName("IntroWall", Services.ResourceManager:getGlobalPool())
         self:addChild(self.wall)
 
-       self.particleEmitter = SceneParticleEmitter("SparkParticle", self, Particle.BILLBOARD_PARTICLE, ParticleEmitter.CONTINUOUS_EMITTER,
-							15.8, 70, Vector3(0,0,0), Vector3(0,-0.4,0), Vector3(0,0,0), Vector3(0,0,0))
-    
-        self.particleEmitter:setBlendingMode(Renderer.BLEND_MODE_LIGHTEN)
- 
-        self.particleEmitter:getEmitter().colorCurveR:addControlPoint2d(0,1)
-        self.particleEmitter:getEmitter().colorCurveR:addControlPoint2d(100,1)
+		self.particleEmitter = SceneParticleEmitter(100, 6.0, 0.3)
+		self.particleEmitter.depthTest = false
 
-        self.particleEmitter:getEmitter().colorCurveG:addControlPoint2d(0,0.5)
-        self.particleEmitter:getEmitter().colorCurveG:addControlPoint2d(20,0.3)
-        self.particleEmitter:getEmitter().colorCurveG:addControlPoint2d(100,0)
+		self.particleEmitter:setParticleSize(0.025)
+		self.particleEmitter:setParticleType(SceneParticleEmitter.PARTICLE_TYPE_QUAD)
+		self.particleEmitter:setEmitterSize(Vector3(2.0, 0.0, 2.0))
+		self.particleEmitter:setMaterialByName("SparkParticle", Services.ResourceManager:getGlobalPool())
 
-        self.particleEmitter:getEmitter().colorCurveB:addControlPoint2d(0,0.4)
-        self.particleEmitter:getEmitter().colorCurveB:addControlPoint2d(20,0)
-        self.particleEmitter:getEmitter().colorCurveB:addControlPoint2d(100,0)
+		self.particleEmitter:setParticleDirection(Vector3(0.0, 2.0, 0.0))
 
-        self.particleEmitter:getEmitter().colorCurveA:addControlPoint2d(0,1)
-        self.particleEmitter:getEmitter().colorCurveA:addControlPoint2d(40,1)
-        self.particleEmitter:getEmitter().colorCurveA:addControlPoint2d(100,0)
+		self.particleEmitter.colorCurveR:addControlPoint2d(0,1)
+        self.particleEmitter.colorCurveR:addControlPoint2d(100,1)
 
-        self.particleEmitter:getEmitter().scaleCurve:addControlPoint2d(0,0.04)
-        self.particleEmitter:getEmitter().scaleCurve:addControlPoint2d(20,0.02)
-        self.particleEmitter:getEmitter().scaleCurve:addControlPoint2d(60,0.02)
-        self.particleEmitter:getEmitter().scaleCurve:addControlPoint2d(100,0.0)
+        self.particleEmitter.colorCurveG:addControlPoint2d(0,0.5)
+        self.particleEmitter.colorCurveG:addControlPoint2d(20,0.3)
+        self.particleEmitter.colorCurveG:addControlPoint2d(100,0)
 
-		self.particleEmitter:getEmitter().useScaleCurves = true
-		self.particleEmitter:getEmitter().useColorCurves = true
+        self.particleEmitter.colorCurveB:addControlPoint2d(0,0.4)
+        self.particleEmitter.colorCurveB:addControlPoint2d(20,0)
+        self.particleEmitter.colorCurveB:addControlPoint2d(100,0)
 
-        self.particleEmitter:getEmitter():enablePerlin(true)
-        self.particleEmitter:getEmitter():setPerlinModSize(2)
-        self.particleEmitter:getEmitter():setRotationSpeed(200)
+        self.particleEmitter.colorCurveA:addControlPoint2d(0,1)
+        self.particleEmitter.colorCurveA:addControlPoint2d(40,1)
+        self.particleEmitter.colorCurveA:addControlPoint2d(100,0)
+
+        self.particleEmitter.scaleCurve:addControlPoint2d(0,0.04)
+        self.particleEmitter.scaleCurve:addControlPoint2d(20,0.02)
+        self.particleEmitter.scaleCurve:addControlPoint2d(60,0.02)
+        self.particleEmitter.scaleCurve:addControlPoint2d(100,0.0)
+
+		self.particleEmitter.useScaleCurves = true
+		self.particleEmitter.useColorCurves = true
+
+		self.particleEmitter:setPerlinEnabled(true)
+		self.particleEmitter:setPerlinValue(Vector3(2.0, 1.0, 2.0))
+
         self:addChild(self.particleEmitter)
-
-        self.particleEmitter:getEmitter().particleSpeedMod = 0.5
-
-       self.particleEmitter:getEmitter():setEmitterRadius(Vector3(1,1,1))
-       self.particleEmitter:setPosition(0,-1,0)
+		self.particleEmitter:setPosition(0,-1,0)
 
         self.camera = self:getDefaultCamera()
         self.camera:setPosition(0.5,1,1)
         self.camera:lookAt(Vector3(0,1,0), Vector3(0,1,0))
 
-        introMusic:Play(true)
+		introMusic:Play(true)
 
         self.blockFadeSpeed = 0.2
 

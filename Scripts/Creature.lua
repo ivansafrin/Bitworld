@@ -1,8 +1,9 @@
-class "Creature" (SceneEntity)
+class "Creature" (Entity)
 
 Creature.ATTACK = 0
 
 --[[  ** AI modes ** ]]
+
 Creature.SEEK_MODE = 0
 Creature.ATTACK_MODE = 1
 Creature.FLEE_MODE = 2
@@ -21,8 +22,8 @@ function Creature:Creature(creatureIndex)
 	-- Creature states
 
 	self.dummy = false		-- Dummy creature
-	self.charging = false	 --
-	self.dead = false
+	self.charging = false	 --  is creature charging an attack
+	self.dead = false		 -- is creature dead?
 	self.friendly = false
 	self.archer = false
 	self.cloaked = false
@@ -57,7 +58,10 @@ function Creature:Creature(creatureIndex)
 		self.rightAttack = false
 	end 
 
-	SceneEntity.SceneEntity(self)
+	Entity.Entity(self)
+
+	self.ownsChildren = true
+
 	self.levelScale = 0.3 * 0.25
 	local scale = self.levelScale
 
@@ -68,33 +72,27 @@ function Creature:Creature(creatureIndex)
 	self.xAccel = 0
 	self.zAccel = 0
 
-	self.shadow = ScenePrimitive(ScenePrimitive.TYPE_PLANE, 0.15,0.15,0)
-	self.shadow.pitch = -90
-	self.shadow.position.y = 0.001
-	self.shadow.position.x = 0.04
-	self.shadow.position.z = -0.02
+	self.shadow = ScenePrimitive(ScenePrimitive.TYPE_PLANE, 0.08,0.08,0)
+	self.shadow:setPosition(0.0, 0.001, 0.00)
 	self.shadow:setColor(1,1,1,0.78)
-	self.shadow:setMaterialByName("Shadow")
+	self.shadow.depthWrite = false
+	self.shadow:setMaterialByName("Shadow", Services.ResourceManager:getGlobalPool())
 	self:addChild(self.shadow)
 
-	self.bodyAnchor = SceneEntity()
+	self.bodyAnchor = Entity()
 	self:addChild(self.bodyAnchor)  
 
-	creatureIndex = 288 - creatureIndex
-	indexX = 16 - (creatureIndex % 16)
+	indexX = (creatureIndex % 8)
+	indexY = 7-(math.floor(creatureIndex/8))
 
-	if indexX == 16 then indexX = 0 end		
-	indexY = math.ceil(creatureIndex/16) - 1
+	cellSizeX = 1/8
+	cellSizeY = 1/8
 
-	cellSizeX = 1/16
-	cellSizeY = 1/18
+	self.icon = ScenePrimitive(ScenePrimitive.TYPE_VPLANE, 0.04,0.04)
 
-	self.icon = ScenePrimitive(ScenePrimitive.TYPE_VPLANE, 0.04,0.04,0)
-
-	self.icon:setMaterialByName("Exclamation")
+	self.icon:setMaterialByName("Exclamation", Services.ResourceManager:getGlobalPool())
 	self.icon.depthTest = false
-	self.icon.position.y = 0.13
-	self.icon.position.x = 0.03
+	self.icon:setPosition(0.04, 0.14)
 	self.icon.billboardMode = true
 	self.icon.billboardRoll = true
 	self:addChild(self.icon)
@@ -102,13 +100,13 @@ function Creature:Creature(creatureIndex)
 	self.icon:setColor(1,1,1,0)
 	self.iconVal = 0
 
+
 	self.slash = ScenePrimitive(ScenePrimitive.TYPE_VPLANE, 0.15,0.15,0)
 
-	self.slash:setMaterialByName("Slash")
+	self.slash:setMaterialByName("Slash", Services.ResourceManager:getGlobalPool())
 	self.slash:setBlendingMode(Renderer.BLEND_MODE_LIGHTEN)
 	self.slash.depthTest = false
-	self.slash.position.x = 0.06
-	self.slash.position.y = 0.08
+	self.slash:setPosition(0.06, 0.08)
 
 	self.slash.billboardMode = true
 	self.slash.billboardRoll = true
@@ -119,108 +117,89 @@ function Creature:Creature(creatureIndex)
 
 
 	local bodyMesh = Mesh(Mesh.TRI_MESH)
+	bodyMesh.indexedMesh = false
 	local sheight = scale  
-  i = 0
-  j = 0
 
+	local i = 0
+	local j = 0
 
+	-- if boss
 	if self.creatureIndex == 666 then	
 		self.boss = true
 		self.bodyAdjust = -0.01
 		
-self.baseXScale = 6
+		self.baseXScale = 6
 
-   newPoly = Polygon()
-  newPoly:addVertex((i*self.levelScale)+scale,0,(j*scale),1,0)  
-		newPoly:addVertex((i*scale)+scale,sheight,(j*scale),1,1)
-  newPoly:addVertex((i*scale),sheight,(j*scale),0,1)
-
-	 bodyMesh:addPolygon(newPoly)	
+		bodyMesh:addVertex((i*self.levelScale)+scale,0,(j*scale),1,0)  
+		bodyMesh:addVertex((i*scale)+scale,sheight,(j*scale),1,1)
+		bodyMesh:addVertex((i*scale),sheight,(j*scale),0,1)
  
-		newPoly = Polygon()
-		newPoly:addVertex((i*scale),0,(j*scale),0,0)	   
-  newPoly:addVertex((i*scale)+scale,0,(j*scale),1,0)  
-  newPoly:addVertex((i*scale),sheight,(j*scale),0,1)
-	 bodyMesh:addPolygon(newPoly)	
+		bodyMesh:addVertex((i*scale),0,(j*scale),0,0)	   
+		bodyMesh:addVertex((i*scale)+scale,0,(j*scale),1,0)  
+		bodyMesh:addVertex((i*scale),sheight,(j*scale),0,1)
   
-  bodyMesh:calculateNormals()
-  self.rBody = SceneMesh(bodyMesh)
-  self.body = self.rBody
+		bodyMesh:calculateNormals()
 
-	bodyMesh = Mesh(Mesh.TRI_MESH)
-  
-   newPoly = Polygon()
-  newPoly:addVertex((i*self.levelScale)+scale,0,(j*scale),0,0)  
-		newPoly:addVertex((i*scale)+scale,sheight,(j*scale),0,1)
-  newPoly:addVertex((i*scale),sheight,(j*scale),1,1)
+		self.rBody = SceneMesh.SceneMeshFromMesh(bodyMesh)
+		self.body = self.rBody
 
-	 bodyMesh:addPolygon(newPoly)	
+		bodyMesh = Mesh(Mesh.TRI_MESH)
+		bodyMesh.indexedMesh = false
+
+		bodyMesh:addVertex((i*self.levelScale)+scale,0,(j*scale),0,0)  
+		bodyMesh:addVertex((i*scale)+scale,sheight,(j*scale),0,1)
+		bodyMesh:addVertex((i*scale),sheight,(j*scale),1,1)
  
-		newPoly = Polygon()
-		newPoly:addVertex((i*scale),0,(j*scale),1,0)	   
-  newPoly:addVertex((i*scale)+scale,0,(j*scale),0,0)  
-  newPoly:addVertex((i*scale),sheight,(j*scale),1,1)
-	 bodyMesh:addPolygon(newPoly)	
+		bodyMesh:addVertex((i*scale),0,(j*scale),1,0)	   
+		bodyMesh:addVertex((i*scale)+scale,0,(j*scale),0,0)  
+		bodyMesh:addVertex((i*scale),sheight,(j*scale),1,1)
   
-  bodyMesh:calculateNormals()
-  self.lBody = SceneMesh(bodyMesh)
+		bodyMesh:calculateNormals()
+		self.lBody = SceneMesh.SceneMeshFromMesh(bodyMesh)
 
-  self.lBody:Translate(0,-self.levelScale,0)
-  self.rBody:Translate(0,-self.levelScale,0)
+		self.lBody:Translate(0,-self.levelScale,0)
+		self.rBody:Translate(0,-self.levelScale,0)
 
-  self.lBody:setMaterialByName("DragonBody")
-  self.rBody:setMaterialByName("DragonBody")
+		self.lBody:setMaterialByName("DragonBody", Services.ResourceManager:getGlobalPool())
+		self.rBody:setMaterialByName("DragonBody", Services.ResourceManager:getGlobalPool())
 
-	self:setScale(6,6,6)
---	self.y = self.levelScale*4*0.5
+		self:setScale(6,6,6)
+		--self.y = self.levelScale*4*0.5
+	else  
 
-	else
+		bodyMesh:addVertex((i*scale)+scale,0,(j*scale),(indexX * cellSizeX) + cellSizeX,indexY*cellSizeY)  
+		bodyMesh:addVertex((i*scale)+scale,sheight,(j*scale),(indexX * cellSizeX) + cellSizeX,(indexY * cellSizeY) + cellSizeY)
+		bodyMesh:addVertex((i*scale),sheight,(j*scale),indexX*cellSizeX,(indexY * cellSizeY) + cellSizeY)
+
+		bodyMesh:addVertex((i*scale),0,(j*scale),(indexX * cellSizeX),(indexY * cellSizeY))	   
+		bodyMesh:addVertex((i*scale)+scale,0,(j*scale),(indexX * cellSizeX)+cellSizeX,(indexY * cellSizeY))  
+		bodyMesh:addVertex((i*scale),sheight,(j*scale),(indexX * cellSizeX),(indexY * cellSizeY)+cellSizeY)
   
-   newPoly = Polygon()
-  newPoly:addVertex((i*scale)+scale,0,(j*scale),(indexX * cellSizeX) + cellSizeX,indexY*cellSizeY)  
-		newPoly:addVertex((i*scale)+scale,sheight,(j*scale),(indexX * cellSizeX) + cellSizeX,(indexY * cellSizeY) + cellSizeY)
-  newPoly:addVertex((i*scale),sheight,(j*scale),indexX*cellSizeX,(indexY * cellSizeY) + cellSizeY)
+		bodyMesh:calculateNormals()
+		self.rBody = SceneMesh.SceneMeshFromMesh(bodyMesh)
+		self.body = self.rBody
 
-	 bodyMesh:addPolygon(newPoly)	
- 
-		newPoly = Polygon()
-		newPoly:addVertex((i*scale),0,(j*scale),(indexX * cellSizeX),(indexY * cellSizeY))	   
-  newPoly:addVertex((i*scale)+scale,0,(j*scale),(indexX * cellSizeX)+cellSizeX,(indexY * cellSizeY))  
-  newPoly:addVertex((i*scale),sheight,(j*scale),(indexX * cellSizeX),(indexY * cellSizeY)+cellSizeY)
-	 bodyMesh:addPolygon(newPoly)	
+		indexX = indexX + 1
+
+		bodyMesh = Mesh(Mesh.TRI_MESH)
+		bodyMesh.indexedMesh = false
+
+		bodyMesh:addVertex((i*scale)+scale,0,(j*scale),(indexX * cellSizeX) - cellSizeX,indexY*cellSizeY)  
+		bodyMesh:addVertex((i*scale)+scale,sheight,(j*scale),(indexX * cellSizeX) - cellSizeX,(indexY * cellSizeY) + cellSizeY)
+		bodyMesh:addVertex((i*scale),sheight,(j*scale),indexX*cellSizeX,(indexY * cellSizeY) + cellSizeY)
+
+		bodyMesh:addVertex((i*scale),0,(j*scale),(indexX * cellSizeX),(indexY * cellSizeY))	   
+		bodyMesh:addVertex((i*scale)+scale,0,(j*scale),(indexX * cellSizeX)-cellSizeX,(indexY * cellSizeY))  
+		bodyMesh:addVertex((i*scale),sheight,(j*scale),(indexX * cellSizeX),(indexY * cellSizeY)+cellSizeY)
   
-  bodyMesh:calculateNormals()
-  self.rBody = SceneMesh.SceneMeshFromMesh(bodyMesh)
-  self.body = self.rBody
- 
+		bodyMesh:calculateNormals()
+		self.lBody = SceneMesh.SceneMeshFromMesh(bodyMesh)
 
-	indexX = indexX + 1
+		self.lBody:Translate(0,0,0)
+		self.rBody:Translate(0,0,0)
 
-	bodyMesh = Mesh(Mesh.TRI_MESH)
-  
-   newPoly = Polygon()
-  newPoly:addVertex((i*scale)+scale,0,(j*scale),(indexX * cellSizeX) - cellSizeX,indexY*cellSizeY)  
-		newPoly:addVertex((i*scale)+scale,sheight,(j*scale),(indexX * cellSizeX) - cellSizeX,(indexY * cellSizeY) + cellSizeY)
-  newPoly:addVertex((i*scale),sheight,(j*scale),indexX*cellSizeX,(indexY * cellSizeY) + cellSizeY)
-
-	 bodyMesh:addPolygon(newPoly)	
- 
-		newPoly = Polygon()
-		newPoly:addVertex((i*scale),0,(j*scale),(indexX * cellSizeX),(indexY * cellSizeY))	   
-  newPoly:addVertex((i*scale)+scale,0,(j*scale),(indexX * cellSizeX)-cellSizeX,(indexY * cellSizeY))  
-  newPoly:addVertex((i*scale),sheight,(j*scale),(indexX * cellSizeX),(indexY * cellSizeY)+cellSizeY)
-	 bodyMesh:addPolygon(newPoly)	
-  
-  bodyMesh:calculateNormals()
-  self.lBody = SceneMesh.SceneMeshFromMesh(bodyMesh)
-
-  self.lBody:Translate(0,0,0)
-  self.rBody:Translate(0,0,0)
-
-  self.lBody:setMaterialByName("Creature")
-  self.rBody:setMaterialByName("Creature")
-
-
+		self.lBody:setMaterialByName("Creature", Services.ResourceManager:getGlobalPool())
+		self.rBody:setMaterialByName("Creature", Services.ResourceManager:getGlobalPool())
 	end
   
 	self.rBody.billboardMode = true
@@ -236,80 +215,59 @@ self.baseXScale = 6
 
 	self.lBody.visible = false
 
-	local shieldMesh = Mesh(Mesh.TRI_MESH)	
+	local shieldMesh = Mesh(Mesh.TRI_MESH)
+	shieldMesh.indexedMesh = false
 
-   newPoly = Polygon()
+	shieldMesh:addVertex((i*self.levelScale)+scale,0,(j*scale),1,0)  
+	shieldMesh:addVertex((i*scale)+scale,sheight,(j*scale),1,1)
+	shieldMesh:addVertex((i*scale),sheight,(j*scale),0,1)
 
---	scale = scale * 0.9
-  --  sheight = sheight * 0.9
+	shieldMesh:addVertex((i*scale),0,(j*scale),0,0)	   
+	shieldMesh:addVertex((i*scale)+scale,0,(j*scale),1,0)
+	shieldMesh:addVertex((i*scale),sheight,(j*scale),0,1)
 
-  newPoly:addVertex((i*self.levelScale)+scale,0,(j*scale),1,0)  
-		newPoly:addVertex((i*scale)+scale,sheight,(j*scale),1,1)
-  newPoly:addVertex((i*scale),sheight,(j*scale),0,1)
-
-	 shieldMesh:addPolygon(newPoly)	
- 
-		newPoly = Polygon()
-		newPoly:addVertex((i*scale),0,(j*scale),0,0)	   
-  newPoly:addVertex((i*scale)+scale,0,(j*scale),1,0)  
-  newPoly:addVertex((i*scale),sheight,(j*scale),0,1)
-
-	 shieldMesh:addPolygon(newPoly)	
 	shieldMesh:calculateNormals()
 
+	self.shield = SceneMesh.SceneMeshFromMesh(shieldMesh)
+	self.shield:setMaterialByName("Shield", Services.ResourceManager:getGlobalPool())
+	self.bodyAnchor:addChild(self.shield)
 
-  self.shield = SceneMesh.SceneMeshFromMesh(shieldMesh)
-  self.shield:setMaterialByName("Shield")
-  self.bodyAnchor:addChild(self.shield)
-
-  self.shield.billboardMode = true
-  self.shield.billboardRoll = true
-
---  self.shield:setColor(1,1,1,0.85)
+	self.shield.billboardMode = true
+	self.shield.billboardRoll = true
 
 	self.shieldX = 0.025
 	self.shieldY = 0.01
 
-   self.shield.visible = false
+	self.shield.visible = false
 	self.hasShield = false
   
-  self.xSpeed = 0
-  self.zSpeed = 0
-  
-  self.movDirMod = 1
-
-  self.speed = 0.5
-  
-  self.moving = false
+	self.xSpeed = 0
+	self.zSpeed = 0
+	self.movDirMod = 1
+	self.speed = 0.5
+	self.moving = false
 	self.jumping = false
 	self.attacking = false
-
 	self.slash.visible = false
-  
-  self.moveVal = math.random(100)
-
+	self.moveVal = math.random(100)
 	self.cloakAgainTimer = 0
-
 	self.falling = false
-
-			self.dragonAttacking = false
-			self.dragonAttackVal = 0
-
-
-  self:Update(0.1)
+	self.dragonAttacking = false
+	self.dragonAttackVal = 0
+	self:Update(0.1)
 	self.targetCreature = nil
 end
 
 
 function Creature:checkHitZ(fromZ, toZ, fromX, toX)
 	if self.boss == true then
-		if ((fromZ < self.position.z and fromZ > self.position.z-0.3) or (toZ < self.position.z and toZ > self.position.z-0.3)) and self.position.x > fromX  and self.position.x < toX then
+		if ((fromZ < self:getPosition().z and fromZ > self:getPosition().z-0.3) or (toZ < self:getPosition().z and toZ > self:getPosition().z-0.3)) and self:getPosition().x > fromX  and self:getPosition().x < toX then
 			return true
 		else
 			return false
 		end
 	else
-		if self.position.z < fromZ and self.position.z > toZ and self.position.x > fromX  and self.position.x < toX then
+		if self:getPosition().z < fromZ and self:getPosition().z > toZ and self:getPosition().x > fromX  and self:getPosition().x < toX then
 			return true
 		else
 			return false
@@ -320,13 +278,13 @@ end
 
 function Creature:checkHitX(fromX, toX, fromZ, toZ)
 	if self.boss == true then
-		if ((fromX > self.position.x and fromX < self.position.x+0.3) or (toX > self.position.x and toX < self.position.x+0.3)) and self.position.z > fromZ  and self.position.z < toZ then
+		if ((fromX > self:getPosition().x and fromX < self:getPosition().x+0.3) or (toX > self:getPosition().x and toX < self:getPosition().x+0.3)) and self:getPosition().z > fromZ  and self:getPosition().z < toZ then
 			return true
 		else
 			return false
 		end
 	else
-		if self.position.x > fromX and self.position.x < toX and self.position.z > fromZ  and self.position.z < toZ then
+		if self:getPosition().x > fromX and self:getPosition().x < toX and self:getPosition().z > fromZ  and self:getPosition().z < toZ then
 			return true
 		else
 			return false
@@ -341,7 +299,7 @@ end
 
 function Creature:showIcon(iconName)
 	self.icon.visible = true
-	self.icon:setMaterialByName(iconName)
+	self.icon:setMaterialByName(iconName, Services.ResourceManager:getGlobalPool())
 	self.icon:setColor(1,1,1,1)
 	self.iconVal = 1
 end
@@ -357,12 +315,12 @@ end
 function Creature:Unfreeze()
 	self.frozen = false
 	if self.boss == true then
-		self.body:setMaterialByName("DragonBody")
+		self.body:setMaterialByName("DragonBody", Services.ResourceManager:getGlobalPool())
 	else
-		self.body:setMaterialByName("Creature")
+		self.body:setMaterialByName("Creature", Services.ResourceManager:getGlobalPool())
 	end
 
-	self.shield:setMaterialByName("Shield")
+	self.shield:setMaterialByName("Shield", Services.ResourceManager:getGlobalPool())
 end
 
 function Creature:Cloak()
@@ -391,10 +349,10 @@ function Creature:Freeze()
 	self.hurting = false
 
 	if self.boss == true then
-		self.body:setMaterialByName("DragonBodyLight")
+		self.body:setMaterialByName("DragonBodyLight", Services.ResourceManager:getGlobalPool())
 	else
-		self.body:setMaterialByName("CreatureLight")
-		self.shield:setMaterialByName("ShieldLight")
+		self.body:setMaterialByName("CreatureLight", Services.ResourceManager:getGlobalPool())
+		self.shield:setMaterialByName("ShieldLight", Services.ResourceManager:getGlobalPool())
 	end
 
 	self.freezeTimer = 0
@@ -414,8 +372,8 @@ function Creature:castSpell()
 		local fireball = level:castFireball(self)
 		if self.boss == true then
 			fireball.y = 0.3
-			self.lBody:setMaterialByName("DragonBodyAttack")
-			self.rBody:setMaterialByName("DragonBodyAttack")
+			self.lBody:setMaterialByName("DragonBodyAttack", Services.ResourceManager:getGlobalPool())
+			self.rBody:setMaterialByName("DragonBodyAttack", Services.ResourceManager:getGlobalPool())
 			self.dragonAttacking = true
 			self.dragonAttackVal = 0
 		end
@@ -430,20 +388,20 @@ function Creature:attack()
 		attackSound:Play()
 --		self:Unblock()
 		if self.hurting == true and self.shieldHurt == false then
-			self.body:setMaterialByName("CreatureNoWeaponHurt")
+			self.body:setMaterialByName("CreatureNoWeaponHurt", Services.ResourceManager:getGlobalPool())
 		else
-			self.body:setMaterialByName("CreatureNoWeapon")
+			self.body:setMaterialByName("CreatureNoWeapon", Services.ResourceManager:getGlobalPool())
 		end
 		if self.movDirMod == 1 then
-			self.slash.position.x = 0.06
-			self.slash.position.y = 0.08
-			self.slash:setMaterialByName("Slash")
+			self.slash:setPositionX(0.06)
+			self.slash:setPositionY(0.08)
+			self.slash:setMaterialByName("Slash", Services.ResourceManager:getGlobalPool())
 		else
-			self.slash.position.x = 0.00
-			self.slash.position.y = 0.05
-			self.slash:setMaterialByName("SlashB")
+			self.slash:setPositionX(0.00)
+			self.slash:setPositionY(0.05)
+			self.slash:setMaterialByName("SlashB", Services.ResourceManager:getGlobalPool())
 		end
-		self.slash.rotation.roll = 120
+		self.slash:setRoll(120)
 		self.slash.visible = true
 		self.attacking = true
 	end
@@ -506,6 +464,9 @@ function Creature:useItem(item)
 end
 
 function Creature:Die()
+	pauseVal = 0.06
+	hud.flashVal = 0.5
+	hud.flashColor = Color(1.0, 1.0, 1.0, 1.0)
 	self.dead = true
 	self.dying = true
 	self:setSpeed(0,0)
@@ -517,10 +478,10 @@ function Creature:Die()
 		doGameEnd()
 	else
 		if random() < 0.1 then
-			 self.level:dropItem(self.position.x, self.position.z, "heart")
+			 self.level:dropItem(self:getPosition().x, self:getPosition().z, "heart")
 			 return
 		elseif random() < 0.3 then
-			 self.level:dropItem(self.position.x, self.position.z, "golds")
+			 self.level:dropItem(self:getPosition().x, self:getPosition().z, "golds")
 			return
 		end	   
 
@@ -556,13 +517,27 @@ function Creature:Hurt()
 		self:Unfreeze()
 	end
 
+	if self.level.player ~= self then
+		if self.targetCreature == nil then
+			self:showIcon("Exclamation")
+			alertSound:Play()
+			self.targetCreature = self.level.player
+		end
+	end
+
 	if self.shieldHurt ~= true then
 		if self.boss == true then 
-			self.lBody:setMaterialByName("DragonBodyHurt")
-			self.rBody:setMaterialByName("DragonBodyHurt")
+			self.lBody:setMaterialByName("DragonBodyHurt", Services.ResourceManager:getGlobalPool())
+			self.rBody:setMaterialByName("DragonBodyHurt", Services.ResourceManager:getGlobalPool())
 		else
-			self.lBody:setMaterialByName("CreatureHurt")
-			self.rBody:setMaterialByName("CreatureHurt")
+			self.lBody:setMaterialByName("CreatureHurt", Services.ResourceManager:getGlobalPool())
+			self.rBody:setMaterialByName("CreatureHurt", Services.ResourceManager:getGlobalPool())
+		end
+
+		if self.level.player == self then
+			hud.flashVal = 1.0
+			pauseVal = 0.04
+			hud.flashColor = Color(1.0, 0.0, 0.0, 1.0)
 		end
 
 		if self.dummy == true then
@@ -575,7 +550,7 @@ function Creature:Hurt()
 	end
 	
 	if self.frozen == false then
-		self.shield:setMaterialByName("ShieldHurt")
+		self.shield:setMaterialByName("ShieldHurt", Services.ResourceManager:getGlobalPool())
 	end
 end
 
@@ -609,18 +584,18 @@ function Creature:thinkAttackMelee(e)
 
 		if levelRotate == true then
 			if self.rightAttack == true then
-				self.targetPoint.y = self.targetCreature.position.z + 0.1
+				self.targetPoint.y = self.targetCreature:getPosition().z + 0.1
 			else
-				self.targetPoint.y = self.targetCreature.position.z - 0.08
+				self.targetPoint.y = self.targetCreature:getPosition().z - 0.08
 			end
-			self.targetPoint.x = self.targetCreature.position.x
+			self.targetPoint.x = self.targetCreature:getPosition().x
 		else
 			if self.rightAttack == true then
-				self.targetPoint.x = self.targetCreature.position.x + 0.1
+				self.targetPoint.x = self.targetCreature:getPosition().x + 0.1
 			else
-				self.targetPoint.x = self.targetCreature.position.x - 0.08
+				self.targetPoint.x = self.targetCreature:getPosition().x - 0.08
 			end
-			self.targetPoint.y = self.targetCreature.position.z
+			self.targetPoint.y = self.targetCreature:getPosition().z
 		end
 		 self:followTargetPoint()
 	else   
@@ -652,8 +627,8 @@ function Creature:thinkAttackMelee(e)
 			self:attack()
 		else
 			self.fallbackTargetPoint = {}
-			self.fallbackTargetPoint.x = self.position.x
-			self.fallbackTargetPoint.y = self.position.z
+			self.fallbackTargetPoint.x = self:getPosition().x
+			self.fallbackTargetPoint.y = self:getPosition().z
 		   self.thinkAttackMode = 0
 		end
 		self.thinkAttackTimer = 0
@@ -666,10 +641,10 @@ function Creature:thinkAttackArcher(e)
 	 
 	if levelRotate == true then
 
-	if self.position.x > self.targetCreature.position.x - 0.01 and self.position.x < self.targetCreature.position.x + 0.01 then
+	if self:getPosition().x > self.targetCreature:getPosition().x - 0.01 and self:getPosition().x < self.targetCreature:getPosition().x + 0.01 then
 		shouldBeShooting = true
 	else
-		if self.position.x > self.targetCreature.position.x then
+		if self:getPosition().x > self.targetCreature:getPosition().x then
 			self:setSpeed(-self.speed, self.zSpeed)
 		else
 			self:setSpeed(self.speed, self.zSpeed)	
@@ -679,10 +654,10 @@ function Creature:thinkAttackArcher(e)
 
 	else
 
-	if self.position.z > self.targetCreature.position.z - 0.01 and self.position.z < self.targetCreature.position.z + 0.01 then
+	if self:getPosition().z > self.targetCreature:getPosition().z - 0.01 and self:getPosition().z < self.targetCreature:getPosition().z + 0.01 then
 		shouldBeShooting = true
 	else
-		if self.position.z > self.targetCreature.position.z then
+		if self:getPosition().z > self.targetCreature:getPosition().z then
 			self:setSpeed(self.xSpeed, -self.speed)
 		else
 			self:setSpeed(self.xSpeed, self.speed)	
@@ -697,13 +672,13 @@ function Creature:thinkAttackArcher(e)
 	if self.aiArcherTimer > 3000 then
 
 		  if levelRotate == true then
-		 if self.position.z > self.targetCreature.position.z == true then
+		 if self:getPosition().z > self.targetCreature:getPosition().z == true then
 			 self:setSpeed(0,-0.001)
 		 else
 			 self:setSpeed(0,0.001)
 		 end
 		else
-		 if self.position.x > self.targetCreature.position.x == true then
+		 if self:getPosition().x > self.targetCreature:getPosition().x == true then
 			 self:setSpeed(-0.001,0)
 		 else
 			 self:setSpeed(0.001,0)
@@ -711,7 +686,7 @@ function Creature:thinkAttackArcher(e)
 
 		end
 
-		local distance = self.targetCreature.position:distance(self.position)
+		local distance = self.targetCreature:getPosition():distance(self:getPosition())
 
 		self.arrowCharge = (5 * (distance/0.9)) - 1 + (math.random() * 2)
 		self:shootArrow()
@@ -727,10 +702,10 @@ function Creature:thinkAttackMage(e)
 	 
 	if levelRotate == true then
 
-	if self.position.x > self.targetCreature.position.x - 0.01 and self.position.x < self.targetCreature.position.x + 0.01 then
+	if self:getPosition().x > self.targetCreature:getPosition().x - 0.01 and self:getPosition().x < self.targetCreature:getPosition().x + 0.01 then
 		shouldBeShooting = true
 	else
-		if self.position.x > self.targetCreature.position.x then
+		if self:getPosition().x > self.targetCreature:getPosition().x then
 			self:setSpeed(-self.speed, self.zSpeed)
 		else
 			self:setSpeed(self.speed, self.zSpeed)	
@@ -740,10 +715,10 @@ function Creature:thinkAttackMage(e)
 
 	else
 
-	if self.position.z > self.targetCreature.position.z - 0.01 and self.position.z < self.targetCreature.position.z + 0.01 then
+	if self:getPosition().z > self.targetCreature:getPosition().z - 0.01 and self:getPosition().z < self.targetCreature:getPosition().z + 0.01 then
 		shouldBeShooting = true
 	else
-		if self.position.z > self.targetCreature.position.z then
+		if self:getPosition().z > self.targetCreature:getPosition().z then
 			self:setSpeed(self.xSpeed, -self.speed)
 		else
 			self:setSpeed(self.xSpeed, self.speed)	
@@ -764,13 +739,13 @@ function Creature:thinkAttackMage(e)
 	if self.aiArcherTimer > timeOut then
 
 		  if levelRotate == true then
-		 if self.position.z > self.targetCreature.position.z == true then
+		 if self:getPosition().z > self.targetCreature:getPosition().z == true then
 			 self:setSpeed(0,-0.001)
 		 else
 			 self:setSpeed(0,0.001)
 		 end
 		else
-		 if self.position.x > self.targetCreature.position.x == true then
+		 if self:getPosition().x > self.targetCreature:getPosition().x == true then
 			 self:setSpeed(-0.001,0)
 		 else
 			 self:setSpeed(0.001,0)
@@ -804,8 +779,8 @@ function Creature:followTargetPoint()
 		self.moving = true
 
 	if levelRotate == true then
-	if self.position.z < self.targetPoint.y - 0.02 or self.position.z > self.targetPoint.y + 0.02 then
-		if self.position.z < self.targetPoint.y then
+	if self:getPosition().z < self.targetPoint.y - 0.02 or self:getPosition().z > self.targetPoint.y + 0.02 then
+		if self:getPosition().z < self.targetPoint.y then
 			self:setSpeed(self.xSpeed,self.speed)
 		else
 			self:setSpeed(self.xSpeed,-self.speed)
@@ -814,7 +789,7 @@ function Creature:followTargetPoint()
 			self:setSpeed(0,self.zSpeed)
 	end
 
-		if self.position.x < self.targetPoint.x then
+		if self:getPosition().x < self.targetPoint.x then
 			self:setSpeed(self.speed,self.zSpeed)
 		else
 			self:setSpeed(-self.speed,self.zSpeed)
@@ -822,8 +797,8 @@ function Creature:followTargetPoint()
 
 	
 	else
-	if self.position.x < self.targetPoint.x - 0.02 or self.position.x > self.targetPoint.x + 0.02 then
-		if self.position.x < self.targetPoint.x then
+	if self:getPosition().x < self.targetPoint.x - 0.02 or self:getPosition().x > self.targetPoint.x + 0.02 then
+		if self:getPosition().x < self.targetPoint.x then
 			self:setSpeed(self.speed,self.zSpeed)
 		else
 			self:setSpeed(-self.speed,self.zSpeed)
@@ -832,7 +807,7 @@ function Creature:followTargetPoint()
 			self:setSpeed(0,self.zSpeed)
 	end
 
-		if self.position.z < self.targetPoint.y then
+		if self:getPosition().z < self.targetPoint.y then
 			self:setSpeed(self.xSpeed,self.speed)
 		else
 			self:setSpeed(self.xSpeed,-self.speed)
@@ -863,13 +838,13 @@ function Creature:thinkSeek(e)
 	local aggroDistance = 1
 	if self.boss == true then aggroDistance = 2 end
 
-	if self.position:distance(self.level.player.position) < aggroDistance and self.level.player.cloaked == false then
+	if self:getPosition():distance(self.level.player:getPosition()) < aggroDistance and self.level.player.cloaked == false then
 		if self.targetCreature == nil then self:showIcon("Exclamation") alertSound:Play() end
 		self.targetCreature = self.level.player
 	end
 
 	if self.targetPoint then
-		if self.position.x > self.targetPoint.x - 0.1 and self.position.x < self.targetPoint.x + 0.1 and self.position.z > self.targetPoint.y - 0.1 and self.position.z < self.targetPoint.y + 0.1 then
+		if self:getPosition().x > self.targetPoint.x - 0.1 and self:getPosition().x < self.targetPoint.x + 0.1 and self:getPosition().z > self.targetPoint.y - 0.1 and self:getPosition().z < self.targetPoint.y + 0.1 then
 			self.targetPoint = nil   
 		end
 	end
@@ -930,7 +905,7 @@ function Creature:Think(e)
 
 		if self.boss == true then attackDistance = self.level.levelScale*5 end
 
-		if self.targetCreature.position:distance(self.position) < attackDistance then
+		if self.targetCreature:getPosition():distance(self:getPosition()) < attackDistance then
 			self.aiMode = 1
 		else
 			self.aiMode = 0
@@ -953,8 +928,8 @@ function Creature:Update(e)
 			if self.dragonAttackVal > 0.3 then
 				self.dragonAttacking = false
 --				if self.hurting == false then
-					self.lBody:setMaterialByName("DragonBody")
-					self.rBody:setMaterialByName("DragonBody")
+					self.lBody:setMaterialByName("DragonBody", Services.ResourceManager:getGlobalPool())
+					self.rBody:setMaterialByName("DragonBody", Services.ResourceManager:getGlobalPool())
   --			  end
 			end
 	end
@@ -983,7 +958,7 @@ function Creature:Update(e)
 	if self.charging == true then
 	if self.arrowCharge < 5 then 
 		self.arrowCharge = self.arrowCharge + 8 * e
-		self.body.rotation.roll = 30 * (self.arrowCharge/5) * self.movDirMod
+		self.body:setRoll(30 * (self.arrowCharge/5) * self.movDirMod)
 	end
 	end
 
@@ -1022,15 +997,15 @@ function Creature:Update(e)
 	
 	if self.dead == true then
 		if self.dying == true then
-			self.body.scale.x = 0.8
-			self.body.scale.y = 0.8
-			self.body.rotation.roll = self.body.rotation.roll + 400 * e
-			self.shield.rotation.roll = self.shield.rotation.roll + 100 * e
-			self.shield.position.y = self.shield.position.y - e * 0.1
+			self.body:setScaleX(0.8)
+			self.body:setScaleY(0.8)
+			self.body:setRoll(self.body:getRoll() + 400 * e)
+			self.shield:setRoll(self.shield:getRoll() + 100 * e)
+			self.shield:setPositionY(self.shield:getPosition().y - e * 0.1)
 
-			self.body.position.y = self.body.position.y - e * 0.1
-			self.body.position.x = self.body.position.x + e * 0.1
-			if self.body.rotation.roll > 90 then
+			self.body:setPositionY(self.body:getPosition().y - e * 0.1)
+			self.body:setPositionX(self.body:getPosition().x + e * 0.1)
+			if self.body:getRoll() > 90 then
 				self.dying = false
 			end
 		end
@@ -1046,54 +1021,54 @@ function Creature:Update(e)
 			self.slash:setPositionX(0.06)
 		end
 
-		self.slash.rotation.roll =  self.slash.rotation.roll - (1400 * e)
-		if self.slash.rotation.roll > 70 then
-			self.scale.x = (self.scale.x - 5 * e) * self.baseXScale
-			self.body.rotation.roll = self.body.rotation.roll + 1000 * e
+		self.slash:setRoll( self.slash:getRoll() - (1400 * e))
+		if self.slash:getRoll() > 70 then
+			self:setScaleX((self:getScale().x - 5 * e) * self.baseXScale)
+			self.body:setRoll(self.body:getRoll() + 1000 * e)
 		else
-			self.scale.x = (self.scale.x + 8 * e) * self.baseXScale
-			self.body.rotation.roll = self.body.rotation.roll - 500 * e
+			self:setScaleX((self:getScale().x + 8 * e) * self.baseXScale)
+			self.body:setRoll(self.body:getRoll() - 500 * e)
 		end
-		if self.slash.rotation.roll < -30 then
+		if self.slash:getRoll() < -30 then
 			self.attacking  = false
 			self.slash.visible = false
 		if self.hurting == true and self.shieldHurt == false then
-			self.body:setMaterialByName("CreatureHurt")
+			self.body:setMaterialByName("CreatureHurt", Services.ResourceManager:getGlobalPool())
 		else
-			self.body:setMaterialByName("Creature")
+			self.body:setMaterialByName("Creature", Services.ResourceManager:getGlobalPool())
 		end
-			self.body.rotation.roll = 0
+			self.body:setRoll(0)
 		end
 		else
 
 		if levelRotate == true then
-			self.slash.position.z = 0
-			self.slash.position.x = 0.03
+			self.slash:setPositionZ(0)
+			self.slash:setPositionX(0.03)
 		else
-			self.slash.position.z = 0.00
-			self.slash.position.x = 0
+			self.slash:setPositionZ(0.00)
+			self.slash:setPositionX(0)
 		end
 
-		self.slash.rotation.roll =  self.slash.rotation.roll + (1400 * e)
-		if self.slash.rotation.roll > 170 then
-			self.scale.x = (self.scale.x - 5 * e) * self.baseXScale
-			self.body.rotation.roll = self.body.rotation.roll - 1000 * e
+		self.slash:setRoll( self.slash:getRoll() + (1400 * e))
+		if self.slash:getRoll() > 170 then
+			self:setScaleX((self:getScale().x - 5 * e) * self.baseXScale)
+			self.body:setRoll(self.body:getRoll() - 1000 * e)
 		else
-			self.scale.x = (self.scale.x + 8 * e) * self.baseXScale
-			self.body.rotation.roll = self.body.rotation.roll + 500 * e
+			self:setScaleX((self:getScale().x + 8 * e) * self.baseXScale)
+			self.body:setRoll(self.body:getRoll() + 500 * e)
 		end
-		if self.slash.rotation.roll > 200 then
+		if self.slash:getRoll() > 200 then
 			self.attacking  = false
 			self.slash.visible = false
 		if self.hurting == true and self.shieldHurt == false then
-			self.body:setMaterialByName("CreatureHurt")
+			self.body:setMaterialByName("CreatureHurt", Services.ResourceManager:getGlobalPool())
 		else
 			if self.frozen == false then
-				self.body:setMaterialByName("Creature")
+				self.body:setMaterialByName("Creature", Services.ResourceManager:getGlobalPool())
 			end
 		end
 
-			self.body.rotation.roll = 0
+			self.body:setRoll(0)
 		end			
 		end
 	else
@@ -1123,31 +1098,31 @@ function Creature:Update(e)
 	local playerY = 0
 
 	self.shadow:setScale(1,1,1)
-	self.shadow:setColor(1,1,1,0.4)
+	self.shadow:setColor(1,1,1,0.6)
 
 	if self.frozen == true then
 		self.body:setScaleY(1)
 	else
 
 	if self.jumping == true then
-		self.bodyAnchor:setPositionY(self.bodyAnchor.position.y + self.yAccel * e)
-		self.body:setScaleY(1 + (self.bodyAnchor.position.y * 1.4))
-		if self.body.scale.y > 1.4 then
+		self.bodyAnchor:setPositionY(self.bodyAnchor:getPosition().y + self.yAccel * e)
+		self.body:setScaleY(1 + (self.bodyAnchor:getPosition().y * 1.4))
+		if self.body:getScale().y > 1.4 then
 			self.body:setScaleY(1.4)
 		end
-		local scaleVal = (self.body.scale.y - 1) / 0.4
+		local scaleVal = (self.body:getScale().y - 1) / 0.4
 		self.shadow:setScale(1+(scaleVal*2),1+(scaleVal*2),1)
 		self.shadow:setColor(1,1,1,0.5 * (1-scaleVal))
-		self.body:setScaleX(1 - (self.body.scale.y-1))
-		if self.bodyAnchor.position.y < 0 then
+		self.body:setScaleX(1 - (self.body:getScale().y-1))
+		if self.bodyAnchor:getPosition().y < 0 then
 			self.jumping = false
 			self.bodyAnchor:setPositionY(0)
 		end
 	elseif self.moving == true then		
 		self.moveVal = self.moveVal + (50 * e)
 		playerY = math.sin(self.moveVal) * 0.01
-		self.body.position.y = (self.levelScale*0.225) + playerY
-		self.body.scale.y = 1 + (playerY * 20)
+		self.body:setPositionY((self.levelScale*0.225) + playerY)
+		self.body:setScaleY(1 + (playerY * 20))
 		
 		if self.hasShield == true then
 			if levelRotate == true then
@@ -1158,7 +1133,7 @@ function Creature:Update(e)
 		end
 
 		--self.body.roll = (playerY * 800 * self.movDirMod ) - (math.abs(self.movDirMod -1)*4 )
-		self.body.rotation.roll = playerY * 800
+		self.body:setRoll(playerY * 800)
 	else
 		self.moveVal = self.moveVal + (20 * e)
 		playerY = math.sin(self.moveVal) * 0.01
@@ -1175,9 +1150,9 @@ function Creature:Update(e)
 		end
 
 		self.body:setScaleX(1 + (playerY * 5))
-		self.body:setPositionX(0.04 - ((0.3 * 0.25 * self.body.scale.x) * 0.5))
+		self.body:setPositionX(0.04 - ((0.3 * 0.25 * self.body:getScale().x) * 0.5))
 		if self.attacking == false and self.charging == false then
-			self.body.rotation.roll = 0
+			self.body:setRoll(0)
 		end
 	end
 	end
@@ -1199,13 +1174,13 @@ end
 --			end
 
 			if self.boss == true then 
-				self.lBody:setMaterialByName("DragonBody")
-				self.rBody:setMaterialByName("DragonBody")
+				self.lBody:setMaterialByName("DragonBody", Services.ResourceManager:getGlobalPool())
+				self.rBody:setMaterialByName("DragonBody", Services.ResourceManager:getGlobalPool())
 			else
-				self.lBody:setMaterialByName("Creature")
-				self.rBody:setMaterialByName("Creature")
+				self.lBody:setMaterialByName("Creature", Services.ResourceManager:getGlobalPool())
+				self.rBody:setMaterialByName("Creature", Services.ResourceManager:getGlobalPool())
 			end
-			self.shield:setMaterialByName("Shield")
+			self.shield:setMaterialByName("Shield", Services.ResourceManager:getGlobalPool())
 			self.hurting = false
 			self.shieldHurt = false
 			self.lBody:setColor(1,1,1,1)
@@ -1222,30 +1197,30 @@ end
 		speedMod = 0.5
 	end
 
-	local selfX = self.position.x
-	local selfZ = self.position.z
+	local selfX = self:getPosition().x
+	local selfZ = self:getPosition().z
 
 	if self.dummy == false then
 
 	if self.collideWalls == true then
 		if levelRotate == true then
 			if self.xSpeed < 0 then 
-			if self.level:canPass(self.position.x + (self.xSpeed*e*speedMod)+(self.xAccel*accelSpeed)-0.1, selfZ) == false then
+			if self.level:canPass(self:getPosition().x + (self.xSpeed*e*speedMod)+(self.xAccel*accelSpeed)-0.1, selfZ) == false then
 				translateOK = false
 			end
 			else
-			if self.level:canPass(self.position.x + (self.xSpeed*e*speedMod)+(self.xAccel*accelSpeed), selfZ) == false then
+			if self.level:canPass(self:getPosition().x + (self.xSpeed*e*speedMod)+(self.xAccel*accelSpeed), selfZ) == false then
 				translateOK = false
 			end
 
 			end
 		else
 		if self.movDirMod == 1 then
-			if self.level:canPass(self.position.x + (self.xSpeed*e*speedMod)+(self.xAccel*accelSpeed), selfZ) == false then
+			if self.level:canPass(self:getPosition().x + (self.xSpeed*e*speedMod)+(self.xAccel*accelSpeed), selfZ) == false then
 				translateOK = false
 			end
 		else
-			if self.level:canPass(self.position.x + (self.xSpeed*e*speedMod)+(self.xAccel*accelSpeed)-0.1, selfZ) == false then
+			if self.level:canPass(self:getPosition().x + (self.xSpeed*e*speedMod)+(self.xAccel*accelSpeed)-0.1, selfZ) == false then
 				translateOK = false
 			end
 		end
@@ -1264,11 +1239,11 @@ end
 
 	if self.collideWalls == true then		
 		if self.zSpeed < 0 then
-			if self.level:canPass(selfX, (self.zAccel*accelSpeed) + self.position.z + (self.zSpeed*e*speedMod)) == false then
+			if self.level:canPass(selfX, (self.zAccel*accelSpeed) + self:getPosition().z + (self.zSpeed*e*speedMod)) == false then
 				translateOK = false
 			end
 		else
-			if self.level:canPass(selfX, (self.zAccel*accelSpeed) + self.position.z + (self.zSpeed*e*speedMod)+0.1) == false then
+			if self.level:canPass(selfX, (self.zAccel*accelSpeed) + self:getPosition().z + (self.zSpeed*e*speedMod)+0.1) == false then
 				translateOK = false
 			end
 		end
@@ -1294,13 +1269,12 @@ end
 		if self.freezeTimer > frozenTime then 
 			self:Unfreeze()
 		end
-
 	else
 		self:setColor(1,1,1,1)
 	end
 
-	self.bodyAnchor.scale.x = 1
-	self.bodyAnchor.scale.y = 1
+	self.bodyAnchor:setScaleX(1)
+	self.bodyAnchor:setScaleY(1)
 
 	if self.cloaked == true then
 		self:setColor(1,1,1,0.3)
@@ -1309,12 +1283,12 @@ end
 
 	if self.boss == true then
 		if levelRotate == true then
-			self.body.position.x = 0.003
+			self.body:setPositionX(0.003)
 		else
-			self.body.position.x = 0.03 * levelRotateVal
+			self.body:setPositionX(0.03 * levelRotateVal)
 		end
 	else
-		self.body.position.x = 0.03 * levelRotateVal
+		self.body:setPositionX(0.03 * levelRotateVal)
 	end
   
 end

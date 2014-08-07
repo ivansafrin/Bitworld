@@ -1,15 +1,23 @@
 <?xml version="1.0" ?>
 <polycode_material_library>
+    <shaders>
+        <shader type="glsl" name="DefaultWhite" numAreaLights="4" numSpotLights="0" screen="false">
+            <vp source="default/DefaultShader.vert" />
+            <fp source="Resources/shaders/DefaultShaderWhite.frag" />
+        </shader>
+    </shaders>
+    <cubemaps />
     <materials>
         <material name="DungeonWorld" blendingMode="0">
-            <shader name="DefaultShader">
+            <shader name="DefaultShaderVertex">
                 <textures>
                     <texture name="diffuse">Resources/gfx/floor_1.png</texture>
                 </textures>
                 <params>
-                    <param name="shininess" type="Number" value="2.00" />
-                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                    <param name="specular_color" type="Color" value="0.00 0.00 0.00 1.00" />
+                    <param name="shininess" value="2.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
                 </params>
             </shader>
         </material>
@@ -19,9 +27,10 @@
                     <texture name="diffuse">Resources/gfx/floor_1.png</texture>
                 </textures>
                 <params>
-                    <param name="shininess" type="Number" value="50.00" />
-                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                    <param name="specular_color" type="Color" value="0.00 0.00 0.00 1.00" />
+                    <param name="shininess" value="50.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
                 </params>
             </shader>
         </material>
@@ -31,9 +40,10 @@
                     <texture name="diffuse">Resources/gfx/castleWall.png</texture>
                 </textures>
                 <params>
-                    <param name="shininess" type="Number" value="50.00" />
-                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                    <param name="specular_color" type="Color" value="0.00 0.00 0.00 1.00" />
+                    <param name="shininess" value="50.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
                 </params>
             </shader>
         </material>
@@ -43,9 +53,10 @@
                     <texture name="diffuse">Resources/gfx/floor_lava.png</texture>
                 </textures>
                 <params>
-                    <param name="shininess" type="Number" value="50.00" />
-                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="shininess" value="50.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
                 </params>
             </shader>
         </material>
@@ -55,24 +66,37 @@
                     <texture name="diffuse">Resources/gfx/castleWall.png</texture>
                 </textures>
                 <params>
-                    <param name="shininess" type="Number" value="50.00" />
-                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="shininess" value="50.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="1.00 1.00 1.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
                 </params>
             </shader>
         </material>
         <material name="VillageSkin" blendingMode="0">
-            <shader name="Unlit">
+            <shader name="DefaultShaderVertex">
                 <textures>
                     <texture name="diffuse">Resources/gfx/floor_village.png</texture>
                 </textures>
+                <params>
+                    <param name="shininess" value="50.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
+                </params>
             </shader>
         </material>
         <material name="VillageSkinWall" blendingMode="0">
-            <shader name="Unlit">
+            <shader name="DefaultShader">
                 <textures>
                     <texture name="diffuse">Resources/gfx/floor_village.png</texture>
                 </textures>
+                <params>
+                    <param name="shininess" value="50.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
+                </params>
             </shader>
         </material>
         <material name="IntroWall" blendingMode="0">
@@ -96,34 +120,36 @@
                 </textures>
             </shader>
         </material>
-        <material name="Shadow" blendingMode="0">
+        <material name="Shadow" blendingMode="1">
             <shader name="Unlit">
                 <textures>
                     <texture name="diffuse">Resources/gfx/shadow.png</texture>
                 </textures>
             </shader>
         </material>
-        <material name="CreatureNoWeapon" blendingMode="0">
-            <shader name="DefaultShader">
+        <material name="CreatureNoWeapon" blendingMode="1">
+            <shader name="DefaultShaderVertex">
                 <textures>
                     <texture name="diffuse">Resources/gfx/ass_char_tran_noweap.png</texture>
                 </textures>
                 <params>
-                    <param name="shininess" type="Number" value="50.00" />
-                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                    <param name="specular_color" type="Color" value="0.00 0.00 0.00 1.00" />
+                    <param name="shininess" value="0.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
                 </params>
             </shader>
         </material>
-        <material name="CreatureNoWeaponHurt" blendingMode="0">
-            <shader name="DefaultShader">
+        <material name="CreatureNoWeaponHurt" blendingMode="1">
+            <shader name="DefaultWhite">
                 <textures>
                     <texture name="diffuse">Resources/gfx/ass_char_tran_noweap.png</texture>
                 </textures>
                 <params>
-                    <param name="shininess" type="Number" value="50.00" />
-                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                    <param name="specular_color" type="Color" value="0.00 0.00 0.00 1.00" />
+                    <param name="shininess" value="0.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="1.00 1.00 1.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
                 </params>
             </shader>
         </material>
@@ -133,9 +159,10 @@
                     <texture name="diffuse">Resources/gfx/props.png</texture>
                 </textures>
                 <params>
-                    <param name="shininess" type="Number" value="50.00" />
-                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="shininess" value="50.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
                 </params>
             </shader>
         </material>
@@ -145,162 +172,168 @@
                     <texture name="diffuse">Resources/gfx/props.png</texture>
                 </textures>
                 <params>
-                    <param name="shininess" type="Number" value="50.00" />
-                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="shininess" value="50.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="1.00 1.00 1.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
                 </params>
             </shader>
         </material>
         <material name="Lava" blendingMode="0">
-            <shader name="DefaultShader">
+            <shader name="Unlit">
                 <textures>
                     <texture name="diffuse">Resources/gfx/lava.png</texture>
                 </textures>
-                <params>
-                    <param name="shininess" type="Number" value="50.00" />
-                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                </params>
             </shader>
         </material>
-        <material name="exitGlow" blendingMode="1">
+        <material name="exitGlow" blendingMode="2">
             <shader name="Unlit">
                 <textures>
                     <texture name="diffuse">Resources/gfx/glow.png</texture>
                 </textures>
             </shader>
         </material>
-        <material name="Shield" blendingMode="0">
+        <material name="Shield" blendingMode="1">
             <shader name="DefaultShaderVertex">
                 <textures>
                     <texture name="diffuse">Resources/gfx/shield.png</texture>
                 </textures>
                 <params>
-                    <param name="shininess" type="Number" value="50.00" />
-                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="shininess" value="50.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="1.00 1.00 1.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
                 </params>
             </shader>
         </material>
-        <material name="ShieldLight" blendingMode="0">
-            <shader name="DefaultShaderVertex">
+        <material name="ShieldLight" blendingMode="2">
+            <shader name="DefaultShader">
                 <textures>
                     <texture name="diffuse">Resources/gfx/shield.png</texture>
                 </textures>
                 <params>
-                    <param name="shininess" type="Number" value="50.00" />
-                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="shininess" value="0.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="1.00 1.00 1.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
                 </params>
             </shader>
         </material>
-        <material name="ShieldHurt" blendingMode="0">
-            <shader name="DefaultShaderVertex">
+        <material name="ShieldHurt" blendingMode="1">
+            <shader name="DefaultWhite">
                 <textures>
                     <texture name="diffuse">Resources/gfx/shield.png</texture>
                 </textures>
                 <params>
-                    <param name="shininess" type="Number" value="50.00" />
-                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="shininess" value="0.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="1.00 1.00 1.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
                 </params>
             </shader>
         </material>
-        <material name="Blood" blendingMode="0">
+        <material name="Blood" blendingMode="1">
             <shader name="DefaultShaderVertex">
                 <textures>
                     <texture name="diffuse">Resources/gfx/blood.png</texture>
                 </textures>
                 <params>
-                    <param name="shininess" type="Number" value="50.00" />
-                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="shininess" value="50.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="1.00 1.00 1.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
                 </params>
             </shader>
         </material>
-        <material name="SkelBlood" blendingMode="0">
+        <material name="SkelBlood" blendingMode="1">
             <shader name="DefaultShaderVertex">
                 <textures>
                     <texture name="diffuse">Resources/gfx/skelBlood.png</texture>
                 </textures>
                 <params>
-                    <param name="shininess" type="Number" value="50.00" />
-                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="shininess" value="50.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="1.00 1.00 1.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
                 </params>
             </shader>
         </material>
-        <material name="GreenBlood" blendingMode="0">
+        <material name="GreenBlood" blendingMode="1">
             <shader name="DefaultShaderVertex">
                 <textures>
                     <texture name="diffuse">Resources/gfx/greenBlood.png</texture>
                 </textures>
                 <params>
-                    <param name="shininess" type="Number" value="50.00" />
-                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="shininess" value="50.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="1.00 1.00 1.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
                 </params>
             </shader>
         </material>
-        <material name="YellowBlood" blendingMode="0">
+        <material name="YellowBlood" blendingMode="1">
             <shader name="DefaultShaderVertex">
                 <textures>
                     <texture name="diffuse">Resources/gfx/yellowBlood.png</texture>
                 </textures>
                 <params>
-                    <param name="shininess" type="Number" value="50.00" />
-                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="shininess" value="50.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="1.00 1.00 1.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
                 </params>
             </shader>
         </material>
-        <material name="BlackBlood" blendingMode="0">
+        <material name="BlackBlood" blendingMode="1">
             <shader name="DefaultShaderVertex">
                 <textures>
                     <texture name="diffuse">Resources/gfx/blackBlood.png</texture>
                 </textures>
                 <params>
-                    <param name="shininess" type="Number" value="50.00" />
-                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="shininess" value="50.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="1.00 1.00 1.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
                 </params>
             </shader>
         </material>
-        <material name="WoodBlood" blendingMode="0">
+        <material name="WoodBlood" blendingMode="1">
             <shader name="DefaultShaderVertex">
                 <textures>
                     <texture name="diffuse">Resources/gfx/woodBlood.png</texture>
                 </textures>
                 <params>
-                    <param name="shininess" type="Number" value="50.00" />
-                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="shininess" value="50.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="1.00 1.00 1.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
                 </params>
             </shader>
         </material>
-        <material name="Heart" blendingMode="0">
+        <material name="Heart" blendingMode="1">
             <shader name="Unlit">
                 <textures>
                     <texture name="diffuse">Resources/gfx/heart.png</texture>
                 </textures>
             </shader>
         </material>
-        <material name="Golds" blendingMode="0">
+        <material name="Golds" blendingMode="1">
             <shader name="Unlit">
                 <textures>
                     <texture name="diffuse">Resources/gfx/golds.png</texture>
                 </textures>
             </shader>
         </material>
-        <material name="Arrow" blendingMode="0">
+        <material name="Arrow" blendingMode="1">
             <shader name="DefaultShaderVertex">
                 <textures>
                     <texture name="diffuse">Resources/gfx/arrow.png</texture>
                 </textures>
                 <params>
-                    <param name="shininess" type="Number" value="50.00" />
-                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="shininess" value="0.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
                 </params>
             </shader>
         </material>
@@ -310,9 +343,10 @@
                     <texture name="diffuse">Resources/gfx/dragonBodyFullAttack.png</texture>
                 </textures>
                 <params>
-                    <param name="shininess" type="Number" value="50.00" />
-                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="shininess" value="50.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="1.00 1.00 1.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
                 </params>
             </shader>
         </material>
@@ -322,9 +356,10 @@
                     <texture name="diffuse">Resources/gfx/dragonBodyFull.png</texture>
                 </textures>
                 <params>
-                    <param name="shininess" type="Number" value="50.00" />
-                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="shininess" value="50.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="1.00 1.00 1.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
                 </params>
             </shader>
         </material>
@@ -334,9 +369,10 @@
                     <texture name="diffuse">Resources/gfx/dragonBodyFull.png</texture>
                 </textures>
                 <params>
-                    <param name="shininess" type="Number" value="50.00" />
-                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="shininess" value="50.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="1.00 1.00 1.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
                 </params>
             </shader>
         </material>
@@ -346,9 +382,10 @@
                     <texture name="diffuse">Resources/gfx/dragonBodyFull.png</texture>
                 </textures>
                 <params>
-                    <param name="shininess" type="Number" value="50.00" />
-                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="shininess" value="50.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="1.00 1.00 1.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
                 </params>
             </shader>
         </material>
@@ -358,9 +395,10 @@
                     <texture name="diffuse">Resources/gfx/dragonHead.png</texture>
                 </textures>
                 <params>
-                    <param name="shininess" type="Number" value="50.00" />
-                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="shininess" value="50.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="1.00 1.00 1.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
                 </params>
             </shader>
         </material>
@@ -370,9 +408,10 @@
                     <texture name="diffuse">Resources/gfx/dragonNeck.png</texture>
                 </textures>
                 <params>
-                    <param name="shininess" type="Number" value="50.00" />
-                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                    <param name="specular_color" type="Color" value="1.00 1.00 1.00 1.00" />
+                    <param name="shininess" value="50.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="1.00 1.00 1.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
                 </params>
             </shader>
         </material>
@@ -382,58 +421,61 @@
                     <texture name="diffuse">Resources/gfx/ass_char_tran.png</texture>
                 </textures>
                 <params>
-                    <param name="shininess" type="Number" value="50.00" />
-                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                    <param name="specular_color" type="Color" value="0.00 0.00 0.00 1.00" />
+                    <param name="shininess" value="50.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
                 </params>
             </shader>
         </material>
-        <material name="Creature" blendingMode="0">
-            <shader name="DefaultShader">
+        <material name="Creature" blendingMode="1">
+            <shader name="DefaultShaderVertex">
                 <textures>
                     <texture name="diffuse">Resources/gfx/ass_char_tran.png</texture>
                 </textures>
                 <params>
-                    <param name="shininess" type="Number" value="50.00" />
-                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                    <param name="specular_color" type="Color" value="0.00 0.00 0.00 1.00" />
+                    <param name="shininess" value="0.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
                 </params>
             </shader>
         </material>
-        <material name="CreatureHurt" blendingMode="0">
-            <shader name="DefaultShader">
+        <material name="CreatureHurt" blendingMode="1">
+            <shader name="DefaultWhite">
                 <textures>
                     <texture name="diffuse">Resources/gfx/ass_char_tran.png</texture>
                 </textures>
                 <params>
-                    <param name="shininess" type="Number" value="50.00" />
-                    <param name="diffuse_color" type="Color" value="1.00 1.00 1.00 1.00" />
-                    <param name="specular_color" type="Color" value="0.00 0.00 0.00 1.00" />
+                    <param name="shininess" value="0.00" />
+                    <param name="ambient_color" value="0.00 0.00 0.00 1.00" />
+                    <param name="specular_color" value="1.00 1.00 1.00 1.00" />
+                    <param name="diffuse_color" value="1.00 1.00 1.00 1.00" />
                 </params>
             </shader>
         </material>
-        <material name="SparkParticle" blendingMode="0">
+        <material name="SparkParticle" blendingMode="2">
             <shader name="Unlit">
                 <textures>
                     <texture name="diffuse">Resources/gfx/spark3.png</texture>
                 </textures>
             </shader>
         </material>
-        <material name="SparkParticleIce" blendingMode="0">
+        <material name="SparkParticleIce" blendingMode="1">
             <shader name="Unlit">
                 <textures>
                     <texture name="diffuse">Resources/gfx/spark.png</texture>
                 </textures>
             </shader>
         </material>
-        <material name="Exclamation" blendingMode="0">
+        <material name="Exclamation" blendingMode="2">
             <shader name="Unlit">
                 <textures>
                     <texture name="diffuse">Resources/gfx/exclamation.png</texture>
                 </textures>
             </shader>
         </material>
-        <material name="Question" blendingMode="0">
+        <material name="Question" blendingMode="2">
             <shader name="Unlit">
                 <textures>
                     <texture name="diffuse">Resources/gfx/question.png</texture>

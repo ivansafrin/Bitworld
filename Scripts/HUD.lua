@@ -1,85 +1,89 @@
 
-class "HUD" (Screen)
+require "Scripts/MainMenu"
+
+class "HUD" (Scene)
 
 function HUD:HUD()
-    Screen.Screen(self)
+    Scene.Scene(self, Scene.SCENE_2D)
+	self:getDefaultCamera():setOrthoSize(0.0, 160)
 
-    self.exitLabel = ScreenLabel("PRESS RETURN TO EXIT TO NEXT LEVEL", 34, "main")
-    self.exitLabel.x = (800-self.exitLabel.width)/2
-    self.exitLabel.y = (300-self.exitLabel.height)/2
-    self:addChild(self.exitLabel)
+	self.gameHUD = Entity()
+	self:addChild(self.gameHUD)
+	self.gameHUD.visible = false
 
+	self.exitLabel = SceneLabel("PRESS RETURN TO EXIT TO NEXT LEVEL", 8, "main")
+    self.gameHUD:addChild(self.exitLabel)
 
-    self.exitLabel2 = ScreenLabel("PRESS RETURN TO ENTER THE FORTRESS", 34, "main")
-    self.exitLabel2.x = (800-self.exitLabel2.width)/2
-    self.exitLabel2.y = (300-self.exitLabel2.height)/2
-    self:addChild(self.exitLabel2)    
+    self.exitLabel2 = SceneLabel("PRESS RETURN TO ENTER THE FORTRESS", 8, "main")
+    self.gameHUD:addChild(self.exitLabel2)    
 
-
-    self.label = ScreenLabel("FPS: 90", 34, "main")
-    self.label.position.x = 700
-    self.label.position.y = -15
-    self:addChild(self.label)
-    self.label:setColor(1,1,1,0.5)
-    self.label.visible = false
-
-    self.goldLabel = ScreenLabel("GOLD:", 34, "main")
-    self.goldLabel.position.x = 5
-    self.goldLabel.position.y = -15
-    self:addChild(self.goldLabel)
-
-
+    self.goldLabel = SceneLabel("GOLD 0", 8, "main")
+    self.gameHUD:addChild(self.goldLabel)
+	self.goldLabel:setAnchorPoint(Vector3(-1.0, 1.0, 0.0))
+    self.goldLabel:setBlendingMode(Renderer.BLEND_MODE_NORMAL)
+    self.goldLabel.alphaTest = true
     self.hearts = {}
   
     for i=0,7 do
-        image = ScreenImage("Resources/gfx/ass_item_tran.png")
-        image:setImageCoordinates(5*8,3*8,8,8)
-        image.scale.x = 2
-        image.scale.y = 2  
-        image.position.x = 5 + (18 * i)
-        image.position.y = 20
-        self:addChild(image)    
+        image = SceneImage("Resources/gfx/heart.png")
+		image:setBlendingMode(Renderer.BLEND_MODE_NORMAL)
+		image:setAnchorPoint(Vector3(-1.0, 1.0, 0.0))
+		image.alphaTest = true
+        self.gameHUD:addChild(image)    
         self.hearts[i] = image
     end
-  
-    self.weaponImage = ScreenImage("Resources/gfx/ass_item_tran.png")
---    self.weaponImage:setImageCoordinates(0,0,8,8)
-    self.weaponImage:setImageCoordinates(6*8,1*8,8,8)
-    self.weaponImage.scale.x = 2
-    self.weaponImage.scale.y = 2  
-    self.weaponImage.position.x = 5
-    self.weaponImage.position.y = 40
-    self.weaponImage.visible = false
-    self:addChild(self.weaponImage)
 
-    local rect = ScreenShape(ScreenShape.SHAPE_RECT,100,2,0,0)
-    rect.position.x = 5+50
-    rect.position.y = 40
-    self:addChild(rect)
+	self.flashVal = 0.0
 
-    rect = ScreenShape(ScreenShape.SHAPE_RECT,100,2,0,0)
-    rect.position.x = 5+50
-    rect.position.y = 50
-    self:addChild(rect)
-
-    rect = ScreenShape(ScreenShape.SHAPE_RECT,2,10,0,0)
-    rect.position.x = 5
-    rect.position.y = 45
-    self:addChild(rect)
-
-    rect = ScreenShape(ScreenShape.SHAPE_RECT,2,10,0,0)
-    rect.position.x = 5+100
-    rect.position.y = 45
-    self:addChild(rect)
-
-    self.powerRect = ScreenShape(ScreenShape.SHAPE_RECT,100,10,0,0)
-    self.powerRect.position.x = 5
-    self.powerRect.position.y = 40
+    self.powerRect = ScenePrimitive(ScenePrimitive.TYPE_VPLANE,100,10)
+	self.powerRect:setAnchorPoint(Vector3(-1.0, 1.0, 0.0))
     self.powerRect:setColor(1,1,1,0.6)
-    self:addChild(self.powerRect)
+    self.gameHUD:addChild(self.powerRect)
 
-    self.powerRect:setPositionMode(ScreenEntity.POSITION_TOPLEFT)
+	self.mainMenu = MainMenu()
+	self:addChild(self.mainMenu)
 
+	self.flashRect = ScenePrimitive(ScenePrimitive.TYPE_VPLANE,160*2,160)
+    self:addChild(self.flashRect)
+    self.flashRect:setBlendingMode(Renderer.BLEND_MODE_NORMAL)
+    self.flashRect.depthTest = false
+    self.flashRect.depthWrite = false
+	self:Reposition()
+
+	self.faderRect = ScenePrimitive(ScenePrimitive.TYPE_VPLANE, 160*2, 160)
+	self.faderRect.depthTest = false
+	self.faderRect.depthWrite = false
+	self.faderRect:setBlendingMode(Renderer.BLEND_MODE_NORMAL)
+	self:addChild(self.faderRect)
+	self.faderRect:setColor(0,0,0,0)
+	self.faderVal = 0
+	self.fadingIn = false
+	self.fadingOut = false
+	self.fadeSpeed = 0.4
+	self.flashColor = Color(1.0, 1.0, 1.0, 1.0)
+end
+
+function HUD:showGameHUD(val)
+	self.gameHUD.visible = val
+end
+
+function HUD:Clear()
+	self.faderRect:setColor(0,0,0,0)
+end
+
+function HUD:fadeIn()
+	self.faderVal = 1
+	self.faderRect:setColor(0,0,0,1)
+	self.fadingIn = true
+end
+
+function HUD:fadeOut(fspeed,endFunc)
+	self.onFadeEnd = endFunc
+	self.fadeSpeed = fspeed
+	self.faderVal = 0
+	self.faderRect:setColor(0,0,0,0)
+	self.fadingIn = false
+	self.fadingOut = true
 end
 
 function HUD:setMaxHP(maxHP)
@@ -104,11 +108,43 @@ function HUD:updateHP(hp)
     end
 end
 
-function HUD:updateGold(gold)
-    self.goldLabel:setText("GOLD:"..gold)
-    self.goldLabel.position.x = 5
+function HUD:Reposition()
+	local aspect = Services.Core:getXRes()/Services.Core:getYRes()
+	self.goldLabel:setPosition(-70 * aspect, 72)
+
+    for i=0,7 do
+        local heart = self.hearts[i]
+		heart:setPosition(-70 * aspect + (9 * i), 65)
+	end
+
+	self.powerRect:setPosition(-70 * aspect, 56)
 end
 
-function HUD:Update(e)    
-   -- self.label:setText("FPS:"..CORE:getFPS())
+function HUD:updateGold(gold)
+    self.goldLabel:setText("GOLD "..gold)
+end
+
+function HUD:Update(e)
+    self.flashRect:setColor(self.flashColor.r, self.flashColor.g, self.flashColor.b, self.flashVal)
+	self.flashVal = self.flashVal - (e * 2.0)
+
+	-- If we're fading out the screen, update the fade value based on time elapsed and check if we're done fading out.
+	if self.fadingOut == true then
+		self.faderVal = self.faderVal + (e * self.fadeSpeed)
+		if self.faderVal > 1 then
+			self.fadingOut = false
+			self.faderVal = 1
+			if self.onFadeEnd ~= nil
+				then self.onFadeEnd()
+			end
+		end
+	end
+
+	if self.fadingIn == true then
+		self.faderVal = self.faderVal - (e * 0.4)
+		if self.faderVal < 0 then
+			self.faderVal = 0
+		end
+	end
+	self.faderRect:setColor(0,0,0,self.faderVal)
 end

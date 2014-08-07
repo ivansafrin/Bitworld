@@ -1,9 +1,11 @@
 <?xml version="1.0" ?>
-<PolycodeProject defaultWidth="800" defaultHeight="600" antiAliasingLevel="0" anisotropyLevel="0" frameRate="60" vSync="true" entryPoint="Scripts/Main.lua">
-    <backgroundColor red="0.364706" green="0.501961" blue="0.737255" />
+<PolycodeProject defaultWidth="960" defaultHeight="540" antiAliasingLevel="0" entryPoint="Scripts/Main.lua" vSync="false" anisotropyLevel="0" frameRate="90" textureFiltering="nearest">
+    <backgroundColor red="0" green="0" blue="0" />
+    <polyarray:fonts>
+        <font name="main" path="Resources/fonts/Underfont.ttf" />
+    </polyarray:fonts>
     <polyarray:packedItems>
         <item type="folder" path="Resources" />
         <item type="folder" path="Scripts" />
     </polyarray:packedItems>
-    <modules />
 </PolycodeProject>

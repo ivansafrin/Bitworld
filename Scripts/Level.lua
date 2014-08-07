@@ -1,55 +1,50 @@
 class "Level" (Scene)
 
 function Level:createFloorTile(mesh,x,y,textureID)
-	local newPoly = Polygon()
 
 	local texID = textureID
-	if self.levelType == "village" then
 
+	if self.levelType == "village" then
 	else
 	texID = 3
+
 	if x == 0 or x == 48 or y == 0 or y == 48 then
 		texID = 0
 	else
+
 		if self.worldData[x-1][y] == 1 then 
-			texID = 5
+			texID = 0
 		end 
 		if self.worldData[x][y+1] == 1 then 
-			texID = 7
+			texID = 0
 		end
 		if self.worldData[x][y-1] == 1 then 
-			texID = 4
+			texID = 0
 		end 
 		if self.worldData[x+1][y] == 1 then 
-			texID = 6
+			texID = 0
 		end 
 		if self.worldData[x+1][y] == 1 and self.worldData[x-1][y] == 1 then 
-			texID = 9
+			texID = 0
 		end 
 	end
-
 	end
 
-
-	local stepX = 1.0/16.0
+	local stepX = 0.0625
 	local offsetX = texID * stepX 
 
-	newPoly:addVertex((x*self.levelScale),0,(y*self.levelScale)+self.levelScale,offsetX+stepX,0)
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale)+self.levelScale,offsetX+stepX,1)
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale),offsetX,1)
-	mesh:addPolygon(newPoly)
- 
+	mesh:addVertex((x*self.levelScale),0,(y*self.levelScale)+self.levelScale,offsetX,0)
+	mesh:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale)+self.levelScale,offsetX+stepX,0)
+	mesh:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale),offsetX+stepX,1)
 
-	newPoly = Polygon()
-	newPoly:addVertex((x*self.levelScale),0,(y*self.levelScale)+self.levelScale,offsetX+stepX, 1)
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale),offsetX, 1)
-	newPoly:addVertex((x*self.levelScale),0,(y*self.levelScale),offsetX, 0)	
-	mesh:addPolygon(newPoly)
+	mesh:addVertex((x*self.levelScale),0,(y*self.levelScale)+self.levelScale,offsetX, 0)
+	mesh:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale),offsetX+stepX, 1)
+	mesh:addVertex((x*self.levelScale),0,(y*self.levelScale),offsetX, 1)	
 end
 
 function Level:createHoleTile(mesh,x,y)
 	
-	local stepX = 1/16
+	local stepX = 0.0625
 	  
 	local offsetX = 1 * stepX 
 	
@@ -57,59 +52,39 @@ function Level:createHoleTile(mesh,x,y)
 	self.sheight = self.sheight * -0.5
 
 	if self.worldData[x][y-1] ~= 9 then
-	newPoly = Polygon()
-	newPoly:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale),offsetX,0)
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,self.sheight,(y*self.levelScale),offsetX, 1)
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale),offsetX+stepX, 0)
-	mesh:addPolygon(newPoly)
- 
-	newPoly = Polygon()
-	newPoly:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale),offsetX, 1)
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale),offsetX+stepX,1)
-	newPoly:addVertex((x*self.levelScale),0,(y*self.levelScale),offsetX+stepX,0)
-	mesh:addPolygon(newPoly)   
+		mesh:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale),offsetX,0)
+		mesh:addVertex((x*self.levelScale)+self.levelScale,self.sheight,(y*self.levelScale),offsetX, 1)
+		mesh:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale),offsetX+stepX, 0)
+		mesh:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale),offsetX, 1)
+		mesh:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale),offsetX+stepX,1)
+		mesh:addVertex((x*self.levelScale),0,(y*self.levelScale),offsetX+stepX,0)
 	end
 
 	if self.worldData[x][y+1] ~= 9 then
-	newPoly = Polygon()
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale)+self.levelScale,offsetX, 1)	  
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,self.sheight,(y*self.levelScale)+self.levelScale,offsetX+stepX, 1)
-	newPoly:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale)+self.levelScale,offsetX+stepX, 0)
-	mesh:addPolygon(newPoly) 
-	  
-	newPoly = Polygon()
-	newPoly:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale)+self.levelScale,offsetX+stepX, 0)
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale)+self.levelScale,offsetX,1)	  
-	newPoly:addVertex((x*self.levelScale),0,(y*self.levelScale)+self.levelScale,offsetX, 0)
-	mesh:addPolygon(newPoly)			
+		mesh:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale)+self.levelScale,offsetX, 1)	  
+		mesh:addVertex((x*self.levelScale)+self.levelScale,self.sheight,(y*self.levelScale)+self.levelScale,offsetX+stepX, 1)
+		mesh:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale)+self.levelScale,offsetX+stepX, 0)
+		mesh:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale)+self.levelScale,offsetX+stepX, 0)
+		mesh:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale)+self.levelScale,offsetX,1)	  
+		mesh:addVertex((x*self.levelScale),0,(y*self.levelScale)+self.levelScale,offsetX, 0)
 	end
-	  
+
 	if self.worldData[x-1][y] ~= 9 then
-	newPoly = Polygon()
-	newPoly:addVertex((x*self.levelScale),0,(y*self.levelScale)+self.levelScale,offsetX, 1)	  
-	newPoly:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale)+self.levelScale,offsetX+stepX, 1)
-	newPoly:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale),offsetX+stepX, 0)
-	mesh:addPolygon(newPoly)
- 
-	newPoly = Polygon()
-	newPoly:addVertex((x*self.levelScale),0,(y*self.levelScale),offsetX, 0)		  
-	newPoly:addVertex((x*self.levelScale),0,(y*self.levelScale)+self.levelScale,offsetX,1)	  
-	newPoly:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale),offsetX+stepX, 0)
-	mesh:addPolygon(newPoly)	
+		mesh:addVertex((x*self.levelScale),0,(y*self.levelScale)+self.levelScale,offsetX, 1)	  
+		mesh:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale)+self.levelScale,offsetX+stepX, 1)
+		mesh:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale),offsetX+stepX, 0)
+		mesh:addVertex((x*self.levelScale),0,(y*self.levelScale),offsetX, 0)		  
+		mesh:addVertex((x*self.levelScale),0,(y*self.levelScale)+self.levelScale,offsetX,1)	  
+		mesh:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale),offsetX+stepX, 0)
 	end
 	  
 	if self.worldData[x+1][y] ~= 9 then
-	newPoly = Polygon()
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,self.sheight,(y*self.levelScale),offsetX+stepX,0)	  
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,self.sheight,(y*self.levelScale)+self.levelScale,offsetX+stepX,1)
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale)+self.levelScale,offsetX,1)  
-	mesh:addPolygon(newPoly)
- 
-	newPoly = Polygon()
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,self.sheight,(y*self.levelScale),offsetX+stepX,0)	  
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale)+self.levelScale,offsetX,1) 
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale),offsetX,0)		  
-	mesh:addPolygon(newPoly)   
+		mesh:addVertex((x*self.levelScale)+self.levelScale,self.sheight,(y*self.levelScale),offsetX+stepX,0)	  
+		mesh:addVertex((x*self.levelScale)+self.levelScale,self.sheight,(y*self.levelScale)+self.levelScale,offsetX+stepX,1)
+		mesh:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale)+self.levelScale,offsetX,1)  
+		mesh:addVertex((x*self.levelScale)+self.levelScale,self.sheight,(y*self.levelScale),offsetX+stepX,0)	  
+		mesh:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale)+self.levelScale,offsetX,1) 
+		mesh:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale),offsetX,0)		  
 	end
 
 	self.sheight = oldheight 
@@ -117,69 +92,47 @@ end
 
 function Level:createWallTile(mesh,x,y,textureID)
 	
-	local stepX = 1/16
+	local stepX = 0.0625
 	local offsetX = 1 * stepX 
 
-	local newPoly = Polygon()
-	newPoly:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale)+self.levelScale,0,offsetX+stepX)   
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,self.sheight,(y*self.levelScale)+self.levelScale,1,offsetX+stepX)
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,self.sheight,(y*self.levelScale),1,offsetX)
-	mesh:addPolygon(newPoly)
- 
-	newPoly = Polygon()
-	newPoly:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale)+self.levelScale,0,offsetX+stepX)
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,self.sheight,(y*self.levelScale),1,offsetX)
-	newPoly:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale),0,offsetX)	
-	mesh:addPolygon(newPoly)	
+	mesh:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale)+self.levelScale,offsetX,0)   
+	mesh:addVertex((x*self.levelScale)+self.levelScale,self.sheight,(y*self.levelScale)+self.levelScale,offsetX+stepX,0)
+	mesh:addVertex((x*self.levelScale)+self.levelScale,self.sheight,(y*self.levelScale),offsetX+stepX,1)
+
+	mesh:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale)+self.levelScale, offsetX, 0)
+	mesh:addVertex((x*self.levelScale)+self.levelScale,self.sheight,(y*self.levelScale),offsetX+stepX, 1)
+	mesh:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale),offsetX, 1)
 	  
 	local offsetX = 2 * stepX 
 
-	newPoly = Polygon()
-	newPoly:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale),0,offsetX)
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,self.sheight,(y*self.levelScale),1,offsetX)
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale),0,offsetX+stepX)
-	mesh:addPolygon(newPoly)
- 
-	newPoly = Polygon()
-	newPoly:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale),1,offsetX)
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale),1,offsetX+stepX)
-	newPoly:addVertex((x*self.levelScale),0,(y*self.levelScale),0,offsetX+stepX)
-	mesh:addPolygon(newPoly)	
+	mesh:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale),offsetX,0)
+	mesh:addVertex((x*self.levelScale)+self.levelScale,self.sheight,(y*self.levelScale),offsetX+stepX,0)
+	mesh:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale),offsetX+stepX,0.5)
+	mesh:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale),offsetX, 0)
+	mesh:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale),offsetX+stepX, 0.5)
+	mesh:addVertex((x*self.levelScale),0,(y*self.levelScale),offsetX, 0.5)
 
-	newPoly = Polygon()
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale)+self.levelScale,1,offsetX)	  
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,self.sheight,(y*self.levelScale)+self.levelScale,1,offsetX+stepX)			newPoly:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale)+self.levelScale,0,offsetX+stepX)
-	mesh:addPolygon(newPoly) 
-	  
-	newPoly = Polygon()
-	newPoly:addVertex((x*self.levelScale),0,(y*self.levelScale)+self.levelScale,0,offsetX)		  
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale)+self.levelScale,1,offsetX)	  
-	newPoly:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale)+self.levelScale,0,offsetX+stepX)
-	mesh:addPolygon(newPoly)			
-	  
-	newPoly = Polygon()
-	newPoly:addVertex((x*self.levelScale),0,(y*self.levelScale)+self.levelScale,1,offsetX)	  
-	newPoly:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale)+self.levelScale,1,offsetX+stepX)
-	newPoly:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale),0,offsetX+stepX)
-	mesh:addPolygon(newPoly)
- 
-	newPoly = Polygon()
-	newPoly:addVertex((x*self.levelScale),0,(y*self.levelScale),0,offsetX)		  
-	newPoly:addVertex((x*self.levelScale),0,(y*self.levelScale)+self.levelScale,1,offsetX)	  
-	newPoly:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale),0,offsetX+stepX)
-	mesh:addPolygon(newPoly)	
-	  
-	newPoly = Polygon()
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,self.sheight,(y*self.levelScale),0,offsetX+stepX)	  
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,self.sheight,(y*self.levelScale)+self.levelScale,1,offsetX+stepX)
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale)+self.levelScale,1,offsetX)  
-	mesh:addPolygon(newPoly)
- 
-	newPoly = Polygon()
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,self.sheight,(y*self.levelScale),0,offsetX+stepX)	  
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale)+self.levelScale,1,offsetX) 
-	newPoly:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale),0,offsetX)		  
-	mesh:addPolygon(newPoly)		
+	mesh:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale)+self.levelScale, offsetX+stepX,0.5)
+	mesh:addVertex((x*self.levelScale)+self.levelScale,self.sheight,(y*self.levelScale)+self.levelScale, offsetX+stepX,0)
+	mesh:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale)+self.levelScale,offsetX,0)
+	mesh:addVertex((x*self.levelScale),0,(y*self.levelScale)+self.levelScale,offsetX, 0.5)
+	mesh:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale)+self.levelScale,offsetX+stepX, 0.5)
+	mesh:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale)+self.levelScale,offsetX, 0)
+
+	mesh:addVertex((x*self.levelScale),0,(y*self.levelScale)+self.levelScale,offsetX+stepX,0.5)
+	mesh:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale)+self.levelScale,offsetX+stepX,0)
+	mesh:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale),offsetX,0)
+	mesh:addVertex((x*self.levelScale),0,(y*self.levelScale),offsetX, 0.5)
+	mesh:addVertex((x*self.levelScale),0,(y*self.levelScale)+self.levelScale,offsetX+stepX, 0.5)
+	mesh:addVertex((x*self.levelScale),self.sheight,(y*self.levelScale),offsetX, 0)
+
+	mesh:addVertex((x*self.levelScale)+self.levelScale,self.sheight,(y*self.levelScale),offsetX,0)
+	mesh:addVertex((x*self.levelScale)+self.levelScale,self.sheight,(y*self.levelScale)+self.levelScale,offsetX+stepX,0)
+	mesh:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale)+self.levelScale,offsetX+stepX, 0.5)
+	mesh:addVertex((x*self.levelScale)+self.levelScale,self.sheight,(y*self.levelScale),offsetX, 0)
+	mesh:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale)+self.levelScale,offsetX+stepX, 0.5)
+	mesh:addVertex((x*self.levelScale)+self.levelScale,0,(y*self.levelScale),offsetX, 0.5)
+
 end
 
 function Level:checkArrowAttack(arrow, defending)
@@ -188,21 +141,21 @@ function Level:checkArrowAttack(arrow, defending)
 
 	   if levelRotate == true then
 
-		local attackingFrom = arrow.body.position.z+0.01
-		local attackingTo = arrow.body.position.z - 0.12
+		local attackingFrom = arrow.body:getPosition().z+0.01
+		local attackingTo = arrow.body:getPosition().z - 0.12
 
 		if arrow.dirMod == -1 then	 
-			attackingFrom = arrow.body.position.z + 0.12
-			attackingTo = arrow.body.position.z - 0.01
+			attackingFrom = arrow.body:getPosition().z + 0.12
+			attackingTo = arrow.body:getPosition().z - 0.01
 		end
 
 
-		if defending:checkHitZ(attackingFrom,attackingTo,arrow.body.position.x - 0.05,arrow.body.position.x + 0.05) == true and arrow.body.position.y < 0.12 then
+		if defending:checkHitZ(attackingFrom,attackingTo,arrow.body:getPosition().x - 0.05,arrow.body:getPosition().x + 0.05) == true and arrow.body:getPosition().y < 0.12 then
 			if defending ~= player and defending.hasShield then
 				if math.random(10) < 3 then defending:Block() end
 			end
 		   if defending:getHit() == true then
-			   self:bleed(defending.position.x, defending.position.z, defending.blood)
+			   self:bleed(defending:getPosition().x, defending:getPosition().z, defending.blood)
 			end
 			if defending.HP > 0 and defending.dummy == false then
 				defending.zAccel = (-2.5 * arrow.dirMod)
@@ -216,16 +169,16 @@ function Level:checkArrowAttack(arrow, defending)
 		local attackingTo = arrow.body:getPosition().x + 0.12
 
 		if arrow.dirMod == -1 then	 
-			attackingFrom = arrow.body.position.x - 0.12
-			attackingTo = arrow.body.position.x	
+			attackingFrom = arrow.body:getPosition().x - 0.12
+			attackingTo = arrow.body:getPosition().x	
 		end
 
-		if defending:checkHitX(attackingFrom,attackingTo, arrow.body.position.z - 0.09,arrow.body.position.z + 0.12) == true and arrow.body.position.y < 0.12 then
+		if defending:checkHitX(attackingFrom,attackingTo, arrow.body:getPosition().z - 0.09,arrow.body:getPosition().z + 0.12) == true and arrow.body:getPosition().y < 0.12 then
 			if defending ~= player and defending.hasShield then
 				if math.random(10) < 3 then defending:Block() end
 			end
 		   if defending:getHit() == true then
-			   self:bleed(defending.position.x, defending.position.z, defending.blood)
+			   self:bleed(defending:getPosition().x, defending:getPosition().z, defending.blood)
 			end
 
 			if defending.HP > 0 and defending.dummy == false then
@@ -278,8 +231,8 @@ function Level:checkSpellAttack(spell, defending)
 
 	   if levelRotate == true then
 
-		local attackingFrom = spell.body.position.z+0.01
-		local attackingTo = spell.body.position.z - 0.14
+		local attackingFrom = spell.body:getPosition().z+0.01
+		local attackingTo = spell.body:getPosition().z - 0.14
 
 		if spell.dirMod == -1 then	 
 			attackingFrom = spell.body:getPosition().z + 0.14
@@ -315,17 +268,17 @@ function Level:checkAttack(attacking, defending)
 
 	   if levelRotate == true then
 		
-			attackingFrom = attacking.position.z+0.03
-			attackingTo = attacking.position.z - 0.15
+			attackingFrom = attacking:getPosition().z+0.03
+			attackingTo = attacking:getPosition().z - 0.15
 
 		if attacking.movDirMod == -1 then	 
-			attackingFrom = attacking.position.z + 0.15
-			attackingTo = attacking.position.z - 0.03
+			attackingFrom = attacking:getPosition().z + 0.15
+			attackingTo = attacking:getPosition().z - 0.03
 		end
 
-		if defending:checkHitZ(attackingFrom,attackingTo,attacking.position.x - 0.03,attacking.position.x + 0.03) == true then
+		if defending:checkHitZ(attackingFrom,attackingTo,attacking:getPosition().x - 0.03,attacking:getPosition().x + 0.03) == true then
 		   if defending:getHit() == true then
-			   self:bleed(defending.position.x, defending.position.z,defending.blood)
+			   self:bleed(defending:getPosition().x, defending:getPosition().z,defending.blood)
 		   end
 			if defending.HP > 0 and defending.dummy == false and defending.boss == false then
 			   defending.zAccel = (-2.5 * attacking.movDirMod)
@@ -360,9 +313,9 @@ function Level:doBleed(x,y,bloodType)
 	   self.curBlood = 0 
 	end
 	local blood = self.bloods[self.curBlood]
-	blood:setMaterialByName(bloodType)
-	blood.position.x = x - 0.06 + (random() * 0.12)
-	blood.position.z = y - 0.06 + (random() * 0.12)
+	blood:setMaterialByName(bloodType, Services.ResourceManager:getGlobalPool())
+	blood:setPositionX(x - 0.06 + (random() * 0.12))
+	blood:setPositionZ(y - 0.06 + (random() * 0.12))
 
 end
 
@@ -385,7 +338,7 @@ function Level:makeArrow()
 	arrow.glow = 0
 	arrow.shooter = nil
 	arrow.body.visible = false
-	arrow.body:setMaterialByName("Arrow")
+	arrow.body:setMaterialByName("Arrow", Services.ResourceManager:getGlobalPool())
 	return arrow
 end
 
@@ -437,15 +390,13 @@ function Level:dropItem(x,y,itemType)
 
 	local item = self.items[self.curItem]
 	if itemType == "heart" then
-		item.icon:setMaterialByName("Heart")   
+		item.icon:setMaterialByName("Heart", Services.ResourceManager:getGlobalPool())   
 	elseif itemType == "golds" then
-		item.icon:setMaterialByName("Golds")   
+		item.icon:setMaterialByName("Golds", Services.ResourceManager:getGlobalPool())   
 	end
 
-	item.body.position.x = x
-	item.body.position.z = y
+	item.body:setPosition(x, 0.05, y)
 	item.yAccel = 2.5
-	item.body.position.y = 0.05
 
 	item.type = itemType
 end
@@ -456,20 +407,20 @@ function Level:initItems()
 
 	for i=0,20 do
 		local item = {}
-		item.body = SceneEntity()
+		item.body = Entity()
 	
 		item.icon = ScenePrimitive(ScenePrimitive.TYPE_VPLANE, 0.05,0.05,0)	
 		item.icon.billboardMode = true
 		item.icon.billboardRoll = true
-		item.icon:setMaterialByName("Heart")
+		item.icon:setMaterialByName("Heart", Services.ResourceManager:getGlobalPool())
 		item.body:addChild(item.icon)		
 		item.icon:Translate(0,0.025,0)
 		item.yAccel = 0
 
 		self:addChild(item.body)
 
-		item.body.position.x = 1000
-		item.body.position.z = 1000
+		item.body:setPositionX(1000)
+		item.body:setPositionZ(1000)
 
 		self.items[i] = item
 	end   
@@ -479,12 +430,8 @@ function Level:initBlood()
 	self.curBlood = 0
 	for i=0,40 do
 		local blood = ScenePrimitive(ScenePrimitive.TYPE_PLANE, 0.1,0.1,0)
-		blood.pitch = -90
-		blood.yaw = random(360)
-		blood:setMaterialByName("Blood")
-		blood.position.y = random() * 0.01
-		blood.position.x = 1000
-		blood.position.z = 1000
+		blood:setMaterialByName("Blood", Services.ResourceManager:getGlobalPool())
+		blood:setPosition(1000, random() * 0.01, 1000)
 		local scale = 0.4 + (random() * 0.8)
 		blood:setScale(scale,scale,scale) 
 		blood.alphaTest = true
@@ -502,22 +449,22 @@ function Level:updateArrows(e)
 		local fireball = self.spellballs[i]
 	   
 		if fireball.levelRotate == true then
-			fireball.position.z = fireball.position.z - (2.5*e*fireball.dirMod)
+			fireball.body:setPositionZ(fireball.body:getPosition().z - (2.5*e*fireball.dirMod))
 		else
-			fireball.position.x = fireball.position.x + (2.5*e*fireball.dirMod)
+			fireball.body:setPositionX(fireball.body:getPosition().x + (2.5*e*fireball.dirMod))
 		end
 		
-		if fireball.position.y > 0.05 then
-		   fireball.position.y = fireball.position.y - (e*3)
+		if fireball.body:getPosition().y > 0.05 then
+		   fireball.body:setPositionY(fireball.body:getPosition().y - (e*3))
 		else
-		   fireball.position.y = 0.05
+		   fireball.body:setPositionY(0.05)
 		end
 
-		fireball.body:setPosition(fireball.position.x,fireball.position.y+self.spellPerlin:Get(self.spellPerlinPos, 0.5)*0.0,fireball.position.z+self.spellPerlin:Get(self.spellPerlinPos, 1)*0.15)
+--		fireball.body:setPositionY(fireball.body:getPosition().y+self.spellPerlin:Get(self.spellPerlinPos, 0.5)*0.15)
 
-		if self:canPass(fireball.position.x, fireball.position.z) == false then
-			fireball.position.x = 1000
-			fireball.position.z = 1000
+		if self:canPass(fireball.body:getPosition().x, fireball.body:getPosition().z) == false then
+			fireball.body:setPositionX(1000)
+			fireball.body:setPositionZ(1000)
 		end
 
 	if fireball.shooter == player then 
@@ -535,8 +482,8 @@ function Level:updateArrows(e)
 
 	for i=0,20 do
 	local arrow = self.arrows[i]
-	if arrow.body.position.y > 0.01 then
-	arrow.body.rotation.roll = arrow.body.rotation.roll - 230 * e * arrow.dirMod
+	if arrow.body:getPosition().y > 0.01 then
+		arrow.body:setRoll(arrow.body:getRoll() - 230 * e * arrow.dirMod)
 
 	if arrow.levelRotate == true then
 		arrow.body:Translate(0,e*arrow.yspeed,e*arrow.speed*arrow.dirMod*-1)
@@ -562,7 +509,7 @@ function Level:updateArrows(e)
 
 
 	else
-		arrow.body.position.y = 0.01
+		arrow.body:setPositionY(0.01)
 		if arrow.rested == false then
 			self.arrowLandSound:Play()
 			arrow.rested = true
@@ -591,9 +538,9 @@ function Level:shootArrow(creature)
 	arrow.hitOnce = false
 	arrow.dirMod = creature.movDirMod
 	if creature.movDirMod == 1 then
-		arrow.body.rotation.roll = 30
+		arrow.body:setRoll(30)
 	else
-		arrow.body.rotation.roll = -210
+		arrow.body:setRoll(-210)
 	end
 	arrow.shooter = creature
 	arrow.glow = 1
@@ -605,9 +552,9 @@ function Level:createIceball()
 	local fireball = {}
 	fireball.position = {}
 
-	fireball.body = SceneEntity()
+	fireball.body = Entity()
 
-	fireball.body.position.y = 100
+	fireball.body:setPositionY(100)
 	fireball.levelRotate = false
 	fireball.flame = ScenePrimitive(ScenePrimitive.TYPE_VPLANE, 0.02,0.02,0)
 	fireball.flame:setColor(1,0.3, 0.2,1)
@@ -616,41 +563,40 @@ function Level:createIceball()
 --	fireball.body:addChild(fireball.flame)
 	fireball.flame.y = 0.01
 	fireball.dirMod = 1
-	fireball.position.x = 0
-	fireball.position.y = 100 
-	fireball.position.z = 0
+	fireball.body:setPosition(0, 100, 0)
 
-		fireball.particleEmitter = SceneParticleEmitter("SparkParticleIce", self, Particle.BILLBOARD_PARTICLE, ParticleEmitter.CONTINUOUS_EMITTER,
-		 0.8,40, Vector3(0,0,0), Vector3(0,-0.4,0), Vector3(0,0,0),  Vector3(0,0,0))
+	fireball.particleEmitter = SceneParticleEmitter(50, 1.0, 1.0)
+	
+	fireball.particleEmitter:setParticleSize(0.02)
+	fireball.particleEmitter:setParticleType(SceneParticleEmitter.PARTICLE_TYPE_QUAD)
+	fireball.particleEmitter:setEmitterSize(Vector3(0.0, 0.0, 0.0))
+	fireball.particleEmitter:setMaterialByName("SparkParticleIce", Services.ResourceManager:getGlobalPool())
+	fireball.particleEmitter:setParticleDirection(Vector3(0.0, 0.0, 0.0))
+	fireball.particleEmitter:setGravity(Vector3(0.0, -2.0, 0.0))
+	fireball.particleEmitter:setPerlinEnabled(true)
+	fireball.particleEmitter:setPerlinValue(Vector3(0.4, 0.4, 0.4))
+--	fireball.particleEmitter:setParticleRotationSpeed(Vector3(0.0, 0.0, 50.0))
+	fireball.particleEmitter.useScaleCurve = true
+	fireball.particleEmitter.scaleCurve:addControlPoint2d(0.0, 1.0)
+	fireball.particleEmitter.scaleCurve:addControlPoint2d(1.0, 0.0)	
 
-		fireball.particleEmitter:setBlendingMode(Renderer.BLEND_MODE_LIGHTEN)
+	fireball.particleEmitter.useColorCurves = true
+	fireball.particleEmitter.colorCurveR:addControlPoint2d(0.0, 1.0)
+	fireball.particleEmitter.colorCurveR:addControlPoint2d(1.0, 0.0)	
 
-		fireball.particleEmitter:getEmitter().colorCurveB:addControlPoint2d(0,1)
-		fireball.particleEmitter:getEmitter().colorCurveB:addControlPoint2d(100,1)
+	fireball.particleEmitter.colorCurveG:addControlPoint2d(0.0, 1.0)
+	fireball.particleEmitter.colorCurveG:addControlPoint2d(1.0, 0.0)	
 
-		fireball.particleEmitter:getEmitter().colorCurveG:addControlPoint2d(0,0.5)
-		fireball.particleEmitter:getEmitter().colorCurveG:addControlPoint2d(20,0.3)
-		fireball.particleEmitter:getEmitter().colorCurveG:addControlPoint2d(100,0)
+	fireball.particleEmitter.colorCurveB:addControlPoint2d(0.0, 1.0)
+	fireball.particleEmitter.colorCurveB:addControlPoint2d(1.0, 1.0)	
 
-		fireball.particleEmitter:getEmitter().colorCurveR:addControlPoint2d(0,0.4)
-		fireball.particleEmitter:getEmitter().colorCurveR:addControlPoint2d(20,0)
-		fireball.particleEmitter:getEmitter().colorCurveR:addControlPoint2d(100,0)
+	fireball.particleEmitter.colorCurveA:addControlPoint2d(0.0, 1.0)
+	fireball.particleEmitter.colorCurveA:addControlPoint2d(1.0, 0.0)	
+	fireball.particleEmitter:setParticlesInWorldSpace(true)
 
-		fireball.particleEmitter:getEmitter().colorCurveA:addControlPoint2d(0,1)
-		fireball.particleEmitter:getEmitter().colorCurveA:addControlPoint2d(40,1)
-		fireball.particleEmitter:getEmitter().colorCurveA:addControlPoint2d(100,0)
+	fireball.body:addChild(fireball.particleEmitter)
 
-		fireball.particleEmitter:getEmitter().scaleCurve:addControlPoint2d(0,0.04)
-		fireball.particleEmitter:getEmitter().scaleCurve:addControlPoint2d(20,0.02)
-		fireball.particleEmitter:getEmitter().scaleCurve:addControlPoint2d(60,0.02)
-		fireball.particleEmitter:getEmitter().scaleCurve:addControlPoint2d(100,0.0)
-
-		fireball.particleEmitter:getEmitter():enablePerlin(true)
-		fireball.particleEmitter:getEmitter():setPerlinModSize(0.5)
-		fireball.particleEmitter:getEmitter():setRotationSpeed(400)
-		fireball.body:addChild(fireball.particleEmitter)
-
-	fireball.light = SceneLight(SceneLight.AREA_LIGHT, self, 5.001,0.005)
+	fireball.light = SceneLight(SceneLight.POINT_LIGHT, self, 5.001,0.005)
 	fireball.light:setLightColor(0.0,0.2,0.8)
 	self:addLight(fireball.light)
 	fireball.body:addChild(fireball.light)
@@ -661,9 +607,9 @@ end
 function Level:createFireball()
 	local fireball = {}
 	fireball.position = {}
-	fireball.body = SceneEntity()
+	fireball.body = Entity()
 
-	fireball.body.position.y = 100
+	fireball.body:setPositionY(100)
 	fireball.levelRotate = false
 	fireball.flame = ScenePrimitive(ScenePrimitive.TYPE_VPLANE, 0.02,0.02,0)
 	fireball.flame:setColor(1,0.3, 0.2,1)
@@ -672,43 +618,41 @@ function Level:createFireball()
 --	fireball.body:addChild(fireball.flame)
 	fireball.flame.y = 0.01
 	fireball.dirMod = 1
-	fireball.position.x = 0
-	fireball.position.y = 100
-	fireball.position.z = 0
+	fireball.body:setPosition(0, 100, 0)
 
-		fireball.particleEmitter = SceneParticleEmitter("SparkParticle", self, Particle.BILLBOARD_PARTICLE, ParticleEmitter.CONTINUOUS_EMITTER,
-		0.8, 70, Vector3(0,0,0), Vector3(0,-0.4,0), Vector3(0,0,0), Vector3(0,0,0))
-
+	fireball.particleEmitter = SceneParticleEmitter(100, 0.5, 1.0)
 	
-		fireball.particleEmitter:setBlendingMode(Renderer.BLEND_MODE_LIGHTEN)
- 
-		fireball.particleEmitter:getEmitter().colorCurveR:addControlPoint2d(0,1)
-		fireball.particleEmitter:getEmitter().colorCurveR:addControlPoint2d(100,1)
+	fireball.particleEmitter:setParticleSize(0.02)
+	fireball.particleEmitter:setParticleType(SceneParticleEmitter.PARTICLE_TYPE_QUAD)
+	fireball.particleEmitter:setEmitterSize(Vector3(0.0, 0.0, 0.0))
+	fireball.particleEmitter:setMaterialByName("SparkParticle", Services.ResourceManager:getGlobalPool())
+	fireball.particleEmitter:setParticleDirection(Vector3(0.0, 0.0, 0.0))
+	fireball.particleEmitter:setGravity(Vector3(0.0, 0.0, 0.0))
+	fireball.particleEmitter:setPerlinEnabled(true)
+	fireball.particleEmitter:setPerlinValue(Vector3(1.0, 1.0, 1.0))
+--	fireball.particleEmitter:setParticleRotationSpeed(Vector3(0.0, 0.0, 50.0))
+	fireball.particleEmitter.useScaleCurve = true
+	fireball.particleEmitter.scaleCurve:addControlPoint2d(0.0, 1.0)
+	fireball.particleEmitter.scaleCurve:addControlPoint2d(1.0, 0.0)	
 
-		fireball.particleEmitter:getEmitter().colorCurveG:addControlPoint2d(0,0.5)
-		fireball.particleEmitter:getEmitter().colorCurveG:addControlPoint2d(20,0.3)
-		fireball.particleEmitter:getEmitter().colorCurveG:addControlPoint2d(100,0)
+	fireball.particleEmitter.useColorCurves = true
+	fireball.particleEmitter.colorCurveR:addControlPoint2d(0.0, 1.0)
+	fireball.particleEmitter.colorCurveR:addControlPoint2d(1.0, 1.0)	
 
-		fireball.particleEmitter:getEmitter().colorCurveB:addControlPoint2d(0,0.4)
-		fireball.particleEmitter:getEmitter().colorCurveB:addControlPoint2d(20,0)
-		fireball.particleEmitter:getEmitter().colorCurveB:addControlPoint2d(100,0)
+	fireball.particleEmitter.colorCurveG:addControlPoint2d(0.0, 0.5)
+	fireball.particleEmitter.colorCurveG:addControlPoint2d(1.0, 0.0)	
 
-		fireball.particleEmitter:getEmitter().colorCurveA:addControlPoint2d(0,1)
-		fireball.particleEmitter:getEmitter().colorCurveA:addControlPoint2d(40,1)
-		fireball.particleEmitter:getEmitter().colorCurveA:addControlPoint2d(100,0)
+	fireball.particleEmitter.colorCurveB:addControlPoint2d(0.0, 0.0)
+	fireball.particleEmitter.colorCurveB:addControlPoint2d(1.0, 0.0)	
 
-		fireball.particleEmitter:getEmitter().scaleCurve:addControlPoint2d(0,0.04)
-		fireball.particleEmitter:getEmitter().scaleCurve:addControlPoint2d(20,0.02)
-		fireball.particleEmitter:getEmitter().scaleCurve:addControlPoint2d(60,0.02)
-		fireball.particleEmitter:getEmitter().scaleCurve:addControlPoint2d(100,0.0)
+	fireball.particleEmitter.colorCurveA:addControlPoint2d(0.0, 1.0)
+	fireball.particleEmitter.colorCurveA:addControlPoint2d(1.0, 0.0)	
+	fireball.particleEmitter:setParticlesInWorldSpace(true)
 
-		fireball.particleEmitter:getEmitter():enablePerlin(true)
-		fireball.particleEmitter:getEmitter():setPerlinModSize(0.5)
-		fireball.particleEmitter:getEmitter():setRotationSpeed(400)
-		fireball.body:addChild(fireball.particleEmitter)
+	fireball.body:addChild(fireball.particleEmitter)
 
 
-	fireball.light = SceneLight(SceneLight.AREA_LIGHT, self, 5.001,0.005)
+	fireball.light = SceneLight(SceneLight.POINT_LIGHT, self, 5.001,0.005)
 	fireball.light:setLightColor(0.9,0.2,0)
 	self:addLight(fireball.light)
 	fireball.body:addChild(fireball.light)
@@ -716,13 +660,12 @@ function Level:createFireball()
 	return fireball
 end
 
-
 function Level:castIceball(creature)
 	self.castIceballSound:Play()
 	local fireball = self.iceballs[self.curIceball]
-	fireball:setPositionX(creature:getPosition().x+0.03)
-	fireball:setPositionY(creature:getPosition().y+0.07)
-	fireball:setPositionZ(creature:getPosition().z-0.01)
+	fireball.body:setPositionX(creature:getPosition().x+0.03)
+	fireball.body:setPositionY(creature:getPosition().y+0.07)
+	fireball.body:setPositionZ(creature:getPosition().z-0.01)
 	fireball.shooter = creature
 	fireball.type = 1
 	fireball.levelRotate = levelRotate
@@ -734,9 +677,9 @@ end
 function Level:castFireball(creature)
 	self.castFireballSound:Play()
 	local fireball = self.fireballs[self.curFireball]
-	fireball.position.x = creature:getPosition().x+0.03
-	fireball.position.y = creature:getPosition().y+0.07
-	fireball.position.z = creature:getPosition().z-0.01
+	fireball.body:setPositionX(creature:getPosition().x+0.03)
+	fireball.body:setPositionY(creature:getPosition().y+0.07)
+	fireball.body:setPositionZ(creature:getPosition().z-0.01)
 	fireball.shooter = creature
 	fireball.levelRotate = levelRotate
 	fireball.dirMod = creature.movDirMod
@@ -968,8 +911,7 @@ end
 
 function Level:createProp(propType,x,y)
 	local prop = Prop(propType+1)
-	prop.position.x = (-23*self.levelScale) + (x * self.levelScale)
-	prop.position.z = (-24*self.levelScale) + (y * self.levelScale) - 0.04
+	prop:setPosition((-23*self.levelScale) + (x * self.levelScale), 0.0, (-24*self.levelScale) + (y * self.levelScale) - 0.04)
 	self.props[self.numProps] = prop
 	self.numProps = self.numProps + 1
 	return prop
@@ -1023,8 +965,8 @@ function Level:buildRoom(rect)
 				local creatureIndex = random(#self.createCreatures)
 				local creature = self:createLibraryCreature(self.createCreatures[creatureIndex])
 				if creature ~= nil then
-					creature.position.x = (-24*self.levelScale) + ((rect.x + math.ceil(math.random() * rect.w)) * self.levelScale)
-					creature.position.z = (-24*self.levelScale) + ((rect.y + math.ceil(math.random()*rect.h)) * self.levelScale)
+					creature:setPositionX((-24*self.levelScale) + ((rect.x + math.ceil(math.random() * rect.w)) * self.levelScale))
+					creature:setPositionZ((-24*self.levelScale) + ((rect.y + math.ceil(math.random()*rect.h)) * self.levelScale))
 				end
 			end
 		end
@@ -1256,86 +1198,35 @@ function Level:generateVillageLevel()
 end
 
 function Level:createSnow()
+	self.particleEmitter = SceneParticleEmitter(300, 5.0, 0.01)
 
-	   self.particleEmitter = SceneParticleEmitter("SparkParticle", self, Particle.BILLBOARD_PARTICLE, ParticleEmitter.CONTINUOUS_EMITTER,
-					15.8, 120, Vector3(0,0,0), Vector3(0,0.4,0), Vector3(0,0,0), Vector3(0,0,0))
+	self.particleEmitter:setParticleSize(0.01)
+	self.particleEmitter:setParticleType(SceneParticleEmitter.PARTICLE_TYPE_QUAD)
+	self.particleEmitter:setEmitterSize(Vector3(3.0, 0.0, 3.0))
+	self.particleEmitter:setMaterialByName("SparkParticle", Services.ResourceManager:getGlobalPool())
+	self.particleEmitter:setParticleDirection(Vector3(0.0, 0.0, 0.0))
 
- 
-		self.particleEmitter:setBlendingMode(Renderer.BLEND_MODE_LIGHTEN)
- 
-		self.particleEmitter:getEmitter().colorCurveR:addControlPoint2d(0,1)
-		self.particleEmitter:getEmitter().colorCurveR:addControlPoint2d(100,1)
+	self.particleEmitter:setGravity(Vector3(0.0, -6.0, 0.0))
 
-		self.particleEmitter:getEmitter().colorCurveG:addControlPoint2d(0,1)
-		self.particleEmitter:getEmitter().colorCurveG:addControlPoint2d(100,1)
+	self.particleEmitter:setPerlinEnabled(true)
+	self.particleEmitter:setPerlinValue(Vector3(0.6, 0.0, 0.6))
 
-		self.particleEmitter:getEmitter().colorCurveB:addControlPoint2d(0,1)
-		self.particleEmitter:getEmitter().colorCurveB:addControlPoint2d(100,1)
+	self.particleEmitter:setParticleRotationSpeed(Vector3(0.0, 0.0, 50.0))
 
-		self.particleEmitter:getEmitter().colorCurveA:addControlPoint2d(0,0)
-		self.particleEmitter:getEmitter().colorCurveA:addControlPoint2d(20,1)
-		self.particleEmitter:getEmitter().colorCurveA:addControlPoint2d(80,1)
-		self.particleEmitter:getEmitter().colorCurveA:addControlPoint2d(100,0)
-
-		self.particleEmitter:getEmitter().scaleCurve:addControlPoint2d(0,0.01)
-		self.particleEmitter:getEmitter().scaleCurve:addControlPoint2d(100,0.01)
-
-		self.particleEmitter:getEmitter():enablePerlin(true)
-		self.particleEmitter:getEmitter():setPerlinModSize(2)
-		self.particleEmitter:getEmitter():setRotationSpeed(200)
-		self:addChild(self.particleEmitter)
-
-		self.particleEmitter:getEmitter().particleSpeedMod = 0.5
-
-		self.particleEmitter:getEmitter().useColorCurves = true
-		self.particleEmitter:getEmitter().useScaleCurves = true
-
-	   self.particleEmitter:getEmitter():setEmitterRadius(Vector3(3,3,3))
-	   self.particleEmitter:setPosition(0,2.5,0)
+	self.particleEmitter:setPosition(0.0, 1.0, 0.0)
+	self:addChild(self.particleEmitter)
 end
 
 function Level:createLava()
 	self.lava = ScenePrimitive(ScenePrimitive.TYPE_PLANE, 9,9,0)
-	self.lava.pitch = -90
-	self.lava.y = -0.5
-	self.lava:setMaterialByName("Lava")
+	self.lava:setPositionY(-0.5)
+	self.lava:setMaterialByName("Lava", Services.ResourceManager:getGlobalPool())
 	self:addChild(self.lava)
 end
 
 function Level:createFire()
-		 self.particleEmitter = ParticleEmitter("sparkParticle", nil, nil, self, BILLBOARD_PARTICLE, CONTINUOUS_EMITTER, 10.8, 80, Vector3(0,0,0), Vector3(0,0,0), Vector3(0,0,0))
-	
-		self.particleEmitter:setBlendingMode(Renderer.BLEND_MODE_LIGHTEN)
- 
-		self.particleEmitter.colorCurveR:addControlPoint2d(0,1)
-		self.particleEmitter.colorCurveR:addControlPoint2d(100,1)
-
-		self.particleEmitter.colorCurveG:addControlPoint2d(0,0.5)
-		self.particleEmitter.colorCurveG:addControlPoint2d(20,0.3)
-		self.particleEmitter.colorCurveG:addControlPoint2d(100,0)
-
-		self.particleEmitter.colorCurveB:addControlPoint2d(0,0.4)
-		self.particleEmitter.colorCurveB:addControlPoint2d(20,0)
-		self.particleEmitter.colorCurveB:addControlPoint2d(100,0)
-
-		self.particleEmitter.colorCurveA:addControlPoint2d(0,0)
-		self.particleEmitter.colorCurveA:addControlPoint2d(20,1)
-		self.particleEmitter.colorCurveA:addControlPoint2d(50,1)
-		self.particleEmitter.colorCurveA:addControlPoint2d(100,0)
-
-		self.particleEmitter.scaleCurve:addControlPoint2d(0,0.02)
-		self.particleEmitter.scaleCurve:addControlPoint2d(100,0.02)
-
-		self.particleEmitter:enablePerlin(true)
-		self.particleEmitter:setPerlinModSize(2)
-		self.particleEmitter:setRotationSpeed(200)
-		self:addChild(self.particleEmitter)
-
-		self.particleEmitter.particleSpeedMod = 0.4
-
-	   self.particleEmitter:setEmitterRadius(3)
-	   self.particleEmitter:setPosition(0,0,0)
-
+--	self.particleEmitter = SceneParticleEmitter(100, 3.0, 1.0)
+--	self:addChild(self.particleEmitter)
 end
 
 function Level:generateCastleLevel()
@@ -1430,7 +1321,7 @@ function Level:generateLavaLevel()
 end
 
 function Level:addTorch(x,y)
-	local light = SceneLight(AREA_LIGHT, 18.05,0.01,self)
+	local light = SceneLight(SceneLight.POINT_LIGHT, 18.05,0.01,self)
 	light:setLightColor(1,0.4,0.1)
 	self:addLight(light)
 	light:Translate(((-24*self.levelScale) + (x * self.levelScale)) - 0.1,0.05,(-24*self.levelScale) + (y * self.levelScale))
@@ -1509,26 +1400,23 @@ function Level:createEntranceExit()
 
 	local entrance = self:createProp(26,self.levelStartX, self.levelStartY)
 	entrance.shadow.visible = false
-	entrance.body:setMaterialByName("PropLight")
+	entrance.body:setMaterialByName("PropLight", Services.ResourceManager:getGlobalPool())
 	entrance.body:setScale(1.3,1.3,1.3)
 
 	local exit = self:createProp(27,self.levelEndX, self.levelEndY)
 	exit.shadow.visible = false	
-	exit.body:setMaterialByName("PropLight")
+	exit.body:setMaterialByName("PropLight", Services.ResourceManager:getGlobalPool())
 	exit.body:setScale(1.3,1.3,1.3)
 
 	self.exitGlow = ScenePrimitive(ScenePrimitive.TYPE_VPLANE, 0.10,0.16,0)
-	self.exitGlow:setMaterialByName("exitGlow")
+	self.exitGlow:setMaterialByName("exitGlow", Services.ResourceManager:getGlobalPool())
 	self.exitGlow:setBlendingMode(Renderer.BLEND_MODE_LIGHTEN)
 	self.exitGlow:setColor(1,1,1,0.4)
 	self.exitGlow.depthTest = false
 
 	local pos = self:tileToPosition(self.levelEndX, self.levelEndY)
-
-	   self.exitGlowX = pos.x
-	   self.exitGlow.position.x = pos.x + 0.05
-	   self.exitGlow.position.z = pos.y - 0.08
-	   self.exitGlow.position.y = 0.08
+	self.exitGlowX = pos.x
+	self.exitGlow:setPosition(pos.x + 0.05,  0.08, pos.y - 0.08)
 
 	self.exitGlow.billboardMode = true
 	self.exitGlow.billboardRoll = true
@@ -1552,8 +1440,12 @@ function Level:generateLevel(levelType)
 end
 
 function Level:Level(levelType,levelSkin,createCreatures)
-	Scene.Scene(self)	
+	Scene.Scene(self, Scene.SCENE_3D)	
 	
+	self:getDefaultCamera():setClippingPlanes(0.1, 100.0)
+
+	self.ownsChildren = true
+
 	self.numHoles = 0
 	self.exitGlowVal = 0
 	self.createCreatures = createCreatures
@@ -1668,9 +1560,9 @@ end
 
 function Level:Update(e)
 
-
 	if self.player ~= nil then
 	for i=0,20 do
+
 		local item = self.items[i]
 		if item.body:getPosition().y > 0.025 then
 			item.yAccel = item.yAccel - (20 * e)
@@ -1689,10 +1581,11 @@ function Level:Update(e)
 	end
 	end
 
+
 	if levelRotate == true then
-	   self.exitGlow.position.x = self.exitGlowX - 0.025
+	   self.exitGlow:setPositionX(self.exitGlowX - 0.025)
 	else
-	   self.exitGlow.position.x = self.exitGlowX + 0.05
+	   self.exitGlow:setPositionX(self.exitGlowX + 0.05)
 	end
 
 	self.exitGlowVal = self.exitGlowVal + (e*5)
@@ -1744,7 +1637,7 @@ function Level:Update(e)
 			if showingFinalCutscene == false then
 				creature:Think(e)
 			end
-			if camera:canSee(creature) then			
+			if camera:isAABBInFrustum(creature:getWorldAABB()) then			
 				creature:Update(e)
 				local pos = self:positionToTile(creature:getPosition().x,creature:getPosition().z)
 				if self.worldData[pos.x][pos.y] == 9 then
@@ -1755,56 +1648,55 @@ function Level:Update(e)
 	end
 
 	end
-
 end
 
 function Level:buildLevelGeometry()
---[[
-	local wall = ScenePrimitive(ScenePrimitive.TYPE_VPLANE, 50*self.levelScale,50*self.levelScale,0)
+
+	local wall = ScenePrimitive(ScenePrimitive.TYPE_VPLANE, 50*self.levelScale,50*self.levelScale)
 	self:addChild(wall)
-	wall:setMaterialByName(self.levelSkin.."Wall")
+	wall:setMaterialByName(self.levelSkin.."Wall", Services.ResourceManager:getGlobalPool())
 	wall:Translate(0,0,(-24*self.levelScale)-(self.levelScale*0.5))
 
 	wall = ScenePrimitive(ScenePrimitive.TYPE_VPLANE, 50*self.levelScale,50*self.levelScale,0)
 	self:addChild(wall)
-	wall.yaw = 180
-	wall:setMaterialByName(self.levelSkin.."Wall")
+	wall:setYaw(180)
+	wall:setMaterialByName(self.levelSkin.."Wall", Services.ResourceManager:getGlobalPool())
 	wall:Translate(0,0,24*self.levelScale)
 
-
 	wall = ScenePrimitive(ScenePrimitive.TYPE_VPLANE, 50*self.levelScale,50*self.levelScale,0)
-	wall.yaw = 90
+	wall:setYaw(90)
 	self:addChild(wall)
-	wall:setMaterialByName(self.levelSkin.."Wall")
+	wall:setMaterialByName(self.levelSkin.."Wall", Services.ResourceManager:getGlobalPool())
 	wall:Translate((-24*self.levelScale)+(self.levelScale*0.3),0,0)
 
 	wall = ScenePrimitive(ScenePrimitive.TYPE_VPLANE, 50*self.levelScale,50*self.levelScale,0)
-	wall.yaw = -90
+	wall:setYaw(-90)
 	self:addChild(wall)
-	wall:setMaterialByName(self.levelSkin.."Wall")
+	wall:setMaterialByName(self.levelSkin.."Wall", Services.ResourceManager:getGlobalPool())
 	wall:Translate(25*self.levelScale,0,0)
---]]
+
 	local worldMesh = Mesh(Mesh.TRI_MESH)
 
 	for i=0,48 do
 		for j=0,48 do
 		if self.worldData[i][j] == 0 then
-			self:createFloorTile(worldMesh, i,j, 0)
+			self:createFloorTile(worldMesh, i,j, 0.0)
 		elseif self.worldData[i][j] == 2 then
-			self:createFloorTile(worldMesh, i,j, 3)
+			self:createFloorTile(worldMesh, i,j, 3.0)
 		elseif self.worldData[i][j] == 3 then
-			self:createFloorTile(worldMesh, i,j, 4)
+			self:createFloorTile(worldMesh, i,j, 4.0)
 		elseif self.worldData[i][j] == 9 then
 			self:createHoleTile(worldMesh, i,j)
 		else
-			self:createWallTile(worldMesh, i,j, 0)	  
+			self:createWallTile(worldMesh, i,j, 0.0)	  
 		  end
 		end  
 	end
 
 	worldMesh:calculateNormals(false)  
 	world = SceneMesh.SceneMeshFromMesh(worldMesh)
-	world:setMaterialByName(self.levelSkin)
+	world.ownsMesh = true
+	world:setMaterialByName(self.levelSkin, Services.ResourceManager:getGlobalPool())
 
 	world:Translate(-24*self.levelScale,0,-24*self.levelScale)
 	world:Translate(self.levelScale*0.5,0,-0.5*self.levelScale)

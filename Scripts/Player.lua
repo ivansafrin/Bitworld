@@ -8,18 +8,18 @@ function Player:Player(playerClass)
     self.playerClass = playerClass
 
     if playerClass == "archer" then
-        Creature.Creature(self, 6)
+        Creature.Creature(self, 1)
         self.archer = true
         self.hasShield = false
         self.shield.visible = false
     elseif playerClass == "wizard" then
-        Creature.Creature(self, 84)
+        Creature.Creature(self, 2)
         self.hasShield = false
         self.shield.visible = false
         self.caster = true
     else
         self.warrior = true
-        Creature.Creature(self, 34)
+        Creature.Creature(self, 0)
         self.hasShield = true
         self.shield.visible = true
     end
@@ -35,7 +35,7 @@ end
 function Player:primaryDown()
     if self.archer == true then
         if self.pcharging == false then
-            arrowChargeSound:Play(true)
+            arrowChargeSound:Play()
             self.pcharging = true
             self.arrowCharge = 0.0
             self.charging = true
@@ -45,7 +45,7 @@ function Player:primaryDown()
         end
     elseif self.caster == true then
         if self.pcharging == false then
-            arrowChargeSound:Play(true)
+            arrowChargeSound:Play()
             self.pcharging = true
             self.spellCharge = 0.0
             self.spellCharging = true
@@ -81,7 +81,7 @@ function Player:secondaryDown()
         self:Block()
     elseif self.caster == true then
         if self.pcharging == false then
-            arrowChargeSound:Play(true)
+            arrowChargeSound:Play()
             self.pcharging = true
             self.spellCharge = 0.0
             self.spellCharging = true
