@@ -14,7 +14,7 @@ require "Scripts/Player"
 require "Scripts/HUD"
 require "Scripts/TalkUI"
 
-Services.Core:setVideoMode(1280,800,true, true, 0, 0, false)
+--Services.Core:setVideoMode(1280,800,true, true, 0, 0, false)
 --Services.Core:enableMouse(false)
 
 -- Game globals

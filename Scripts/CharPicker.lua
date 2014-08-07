@@ -29,21 +29,22 @@ function CharPicker:CharPicker()
     self.rotator = Entity()
     self:addChild(self.rotator)
 
-    self:getDefaultCamera():setPosition(0.01,0.1,0.6)
+    self:getDefaultCamera():setPosition(0.005,0.05,0.3)
+    self:getDefaultCamera():setClippingPlanes(0.0, 10.0)
     self:getDefaultCamera():lookAt(Vector3(0.01,0,0), Vector3(0,1,0))
-    self:getDefaultCamera().fov = 65
+    self:getDefaultCamera():setFOV(30)
 
-    self.wizard = Creature(84)
+    self.wizard = Creature(2)
     self.rotator:addChild(self.wizard)
     self.wizard:setPosition(-0,0,0.25)
     self.wizard.shadow.visible = false
 
-    self.archer = Creature(6)
+    self.archer = Creature(1)
     self.rotator:addChild(self.archer)
     self.archer:setPosition(0.25,0,-0.25)
     self.archer.shadow.visible = false
 
-    self.knight = Creature(34)
+    self.knight = Creature(0)
     self.rotator:addChild(self.knight)
     self.knight:setPosition(-0.25,0,-0.25)
     self.knight.shadow.visible = false
